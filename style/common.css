@@ -1,4 +1,18 @@
 body {
     background-color: black;
     color: white;
-  }
+}
+
+header {
+  text-align: center;
+  font-size: 3em;
+}
+
+nav {
+  display: inline;
+  background-color: #222222;
+}
+
+nav>a {
+  font-size: 1.5em;
+} 	
