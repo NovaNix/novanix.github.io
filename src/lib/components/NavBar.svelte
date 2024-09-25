@@ -34,3 +34,49 @@
 		{/each}
 	</ul>
 </nav>
+
+<style>
+	nav {
+		width: 100%;
+		height: 56px;
+
+		background-color: var(--background-color);
+	}
+
+	ul {
+		height: 100%;
+		
+		padding: 0;
+		margin: 0;
+		list-style-type: none;
+
+		display: flex;
+
+	}
+
+	li:hover {
+		background-color: var(--hover-background-color);
+	}
+
+	a {
+		width: 100%;
+		height: 100%;
+		display: block;
+
+		box-sizing: border-box;
+		padding: 0px 10px;
+
+		line-height: 100%;
+
+		text-decoration: none;
+		color: var(--text-color);
+
+		display: flex;
+  		justify-content: center;
+  		align-items: center;
+	}
+
+	span {
+
+	}
+</style>

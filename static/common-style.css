@@ -1,7 +1,31 @@
 .light-mode {
-    
+    --background-color: white;
+    --backdrop-color: #dcdcdc;
+
+    --hover-background-color: lightgray;
+
+    --border-color: black;
+
+    --text-color: black;
 }
 
 .dark-mode {
+    --background-color: black;
+}
 
+:root {
+    font-family: "Noto Sans", sans-serif;
+}
+
+html, body {
+    margin:0;
+    padding:0;    
+    width: 100%;
+    height: 100%;
+
+    background-color: var(--backdrop-color);
+}
+
+code {
+    font-family: Consolas, 'Courier New', monospace;
 }
