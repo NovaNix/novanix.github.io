@@ -75,8 +75,4 @@
   		justify-content: center;
   		align-items: center;
 	}
-
-	span {
-
-	}
 </style>
