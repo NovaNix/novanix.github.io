@@ -1,16 +1,28 @@
 <script lang="ts">
-    import GitHubButton from "./GitHubButton.svelte";
+    import type { ITreeNode } from "$lib/types/treetypes";
+    import Tree from "./tree/Tree.svelte";
 
-
-	export let title;
-	//export let toc;
+	export let title: string;
+	export let toc: ITreeNode[] | null = null;
 
 </script>
 
 <article>
-	<h1>{title}</h1>
+	<header>
+		<h1>{title}</h1>
+		<div id="links">
+			<slot name="links"></slot>
+		</div>
+	</header>
+	
 	<slot></slot>
 </article>
+
+<aside>
+	{#if toc}
+	<Tree roots={toc}/>
+	{/if}
+</aside>
 
 <style>
 	article {

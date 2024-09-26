@@ -1,5 +1,7 @@
 import { getProject, projects } from '$lib/data/projects';
+import { generateTOC } from '$lib/utils/tableofcontents';
 import { marked } from 'marked';
+import { gfmHeadingId } from 'marked-gfm-heading-id';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) 
@@ -11,15 +13,30 @@ export async function load({ fetch, params })
 
     let markdown = await (await fetch(project.file)).text();
 
-    //console.log(project);
-    //console.log(markdown);
+    // configure marked
+    marked.use(gfmHeadingId()); // Add unique IDs to headers
 
-    let content = marked.parse(markdown);
+    let content = await marked.parse(markdown);
+
+    //let document = parse5.parse(content);
+
+    // @ts-ignore
+    let toc = generateTOC(content);
+
+    console.log(content);
+
+    //let page = new DOMParser().parseFromString(content, "text/xml");
+    //let page = 
+
+    //let toc = generateTOC(page.documentElement);
 
     return { 
         
         title: project.name, 
         content: content, 
+
+        //toc: toc,
+        //page: page,
         
         icon: project.icon,
         favicon: project.favicon ?? project.icon,

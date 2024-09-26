@@ -21,6 +21,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"marked": "^14.1.2"
+		"marked": "^14.1.2",
+		"marked-gfm-heading-id": "^4.1.0",
+		"parse5": "^7.1.2"
 	}
 }

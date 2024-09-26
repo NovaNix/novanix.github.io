@@ -5,11 +5,20 @@
 	export let data;
 </script>
 
-<link rel="icon" href={data.favicon} />
+<svelte:head>
+    <link rel="icon" href={data.favicon} />
+</svelte:head>
+
+<!-- {console.log(data.content)} -->
+<!-- {console.log(data.page)} -->
 
 <Article title={data.title}>
-	<GitHubButton url={data.project.github ?? ""} label/>
+    <svelte:fragment slot="links">
+        {#if data.project.github}<GitHubButton url={data.project.github ?? ""} label/>{/if}
+    </svelte:fragment>
+	
+    {@html data.content}
 </Article>
 
-<h1>{data.title}</h1>
-<div>{@html data.content}</div>
+<!-- <h1>{data.title}</h1>
+<div>{@html data.content}</div> -->
