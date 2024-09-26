@@ -22,6 +22,7 @@ export async function load({ fetch, params })
         content: content, 
         
         icon: project.icon,
+        favicon: project.favicon ?? project.icon,
 
         project: project
     }; 

@@ -1,8 +1,12 @@
 <script lang="ts">
 
+	import { page } from '$app/stores';    
+    import ThemeToggle from './buttons/ThemeToggle.svelte';
+
 	interface NavButton {
 		name: string,
-		url: string
+		url: string,
+		open?: boolean
 	}
 
 	let buttons: NavButton[] = [
@@ -23,24 +27,49 @@
 			url: "/about"
 		}
 
-	]
+	];
+
+	function isOpen(button: NavButton, path: string)
+	{
+		// Handle when the home page is selected
+		if (button.url == "/")
+			return button.url == path;
+
+		// Handle all other buttons
+		return path.startsWith(button.url);
+	}
 
 </script>
 
-<nav>
-	<ul>
-		{#each buttons as button}
-			<li><a href={button.url}>{button.name}</a></li>
-		{/each}
-	</ul>
-</nav>
+<header>
+	<h1>SITE NAME</h1>
+	<nav>
+		<ul>
+			{#each buttons as button}
+				<li class:open={isOpen(button, $page.url.pathname)}><a href={button.url}>{button.name}</a></li>
+			{/each}
+		</ul>
+	</nav>
+	<ThemeToggle/>
+</header>
+
 
 <style>
-	nav {
+	header {
 		width: 100%;
 		height: 56px;
 
 		background-color: var(--background-color);
+		display: flex;
+	}
+
+	nav {
+		height: 100%;
+	}
+
+	h1 {
+		padding: 0;
+		margin: 0;
 	}
 
 	ul {
@@ -55,6 +84,10 @@
 	}
 
 	li:hover {
+		background-color: var(--hover-background-color);
+	}
+
+	li.open {
 		background-color: var(--hover-background-color);
 	}
 

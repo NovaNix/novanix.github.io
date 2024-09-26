@@ -6,6 +6,7 @@ export interface Project
     description: string;
 
     icon: string;
+    favicon?: string;
     //test: string;
 
     status: ProjectStatus;
@@ -33,6 +34,18 @@ export const projects: Project[] = [
         icon: "/posts/projects/dj-luigi/icon.jpg",
         status: ProjectStatus.Finished,
         file: "/posts/projects/dj-luigi/dj-luigi.md",
+        github: "https://github.com/NovaNix/DJ-Luigi"
+    },
+
+    {
+        name: "K.K. Radio",
+        id: "kk-radio",
+        description: "",
+        icon: "https://dodo.ac/np/images/e/e2/Portable_Radio_%28White%29_NH_Icon.png",
+        status: ProjectStatus.Finished,
+        file: "/posts/projects/kk-radio/kk-radio.md",
+        github: "https://github.com/NovaNix/kk-radio",
+        url: "https://novanix.github.io/kk-radio/"
     }
 ]
 
