@@ -10,7 +10,10 @@
 }
 
 .dark-mode {
-    --background-color: black;
+    /* --background-color: black; */
+    --background-color: oklch(from var(--backdrop-color) calc(l * 1.25) c h);;
+    --backdrop-color: #121212;
+    --text-color: white;
 }
 
 :root {
@@ -23,6 +26,7 @@ html, body {
     width: 100%;
     height: 100%;
 
+    color: var(--text-color);
     background-color: var(--backdrop-color);
 }
 
