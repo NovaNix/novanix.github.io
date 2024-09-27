@@ -8,10 +8,30 @@
 
 </script>
 
-<li>{node.text}</li>
+<details {open}>
+    <summary><a href={node.url}>{node.text}</a></summary>
 
-{#if open && node.children}
-{#each node.children as child}
-    <svelte:self node={child} depth={depth + 1}/>
-{/each}
-{/if}
+    <div>
+        {#if node.children}
+        {#each node.children as child}
+            <svelte:self node={child} depth={depth + 1}/>
+        {/each}
+        {/if}
+    </div>
+</details>
+
+<style>
+
+    div {
+        margin-left: 20px;
+    }
+
+    a {
+        color: var(--text-color);
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>

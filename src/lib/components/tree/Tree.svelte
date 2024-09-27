@@ -5,6 +5,8 @@
     export let roots: ITreeNode[];
 </script>
 
-{#each roots as root}
-    <TreeNode node={root} depth={0}/>
-{/each}
+<section>
+    {#each roots as root}
+        <TreeNode node={root} depth={0}/>
+    {/each}
+</section>

@@ -7,29 +7,49 @@
 
 </script>
 
-<article>
-	<header>
-		<h1>{title}</h1>
-		<div id="links">
-			<slot name="links"></slot>
-		</div>
-	</header>
+<main>
+	<article>
+		<hgroup>
+			<h1>{title}</h1>
+			<div id="links">
+				<slot name="links"></slot>
+			</div>
+		</hgroup>
+		
+		<slot></slot>
+	</article>
 	
-	<slot></slot>
-</article>
+	<aside>
+		<h1>Table of Contents</h1>
+		{#if toc}
+		<Tree roots={toc}/>
+		{/if}
+	</aside>
+</main>
 
-<aside>
-	{#if toc}
-	<Tree roots={toc}/>
-	{/if}
-</aside>
 
 <style>
+
+	main {
+		display: flex;
+		flex-direction: row;
+
+		justify-content: center;
+		align-items: flex-start;
+
+		gap: 10px;
+	}
+
 	article {
 		max-width: 1012px;
-    	margin-left: auto;
-    	margin-right: auto;
+    	/* margin-left: auto;
+    	margin-right: auto; */
 
     	background-color: var(--background-color);
 	}
+
+	aside {
+		background-color: var(--background-color);
+	}
+
 </style>
