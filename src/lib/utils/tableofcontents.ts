@@ -28,7 +28,7 @@ export function generateTOC(article: string): ITreeNode[]
 
     const nodes: ITreeNode[] = getRoots(headers);
 
-    console.log(nodes);
+    //console.log(nodes);
 
     return nodes;
 }
