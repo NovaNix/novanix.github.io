@@ -12,7 +12,7 @@
 <!-- {console.log(data.content)} -->
 <!-- {console.log(data.page)} -->
 
-<Article title={data.title}>
+<Article title={data.title} toc={data.toc}>
     <svelte:fragment slot="links">
         {#if data.project.github}<GitHubButton url={data.project.github ?? ""} label/>{/if}
     </svelte:fragment>

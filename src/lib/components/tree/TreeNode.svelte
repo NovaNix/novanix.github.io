@@ -10,7 +10,7 @@
 
 <li>{node.text}</li>
 
-{#if open}
+{#if open && node.children}
 {#each node.children as child}
     <svelte:self node={child} depth={depth + 1}/>
 {/each}

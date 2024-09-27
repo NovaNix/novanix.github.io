@@ -4,29 +4,31 @@ import { parse } from "parse5";
 interface Parse5Node
 {
     nodeName: string;
-    childNodes: Parse5Node[];
+    childNodes?: Parse5Node[];
 
     attrs?: Attribute[] | undefined;
+
+    value?: string;
 }
 
-type Attribute = {[key: string]: string};
+interface Attribute {
+    name: string;
+    value: string;
+};
 
 export function generateTOC(article: string): ITreeNode[]
 {
     const document = parse(article);
-
-    console.log(document);
     
 	// There's no easy function inside of HTMLElement that returns all of the headers
     // getElementsByTagName is close, but it only works for a single tag
     // So for now, we'll need to crawl through and find all of the headers
 
-    //document.childNodes[0].
-
-    //return [];
     const headers: Parse5Node[] = findHeaders(document.childNodes[0] as Parse5Node);
 
     const nodes: ITreeNode[] = getRoots(headers);
+
+    console.log(nodes);
 
     return nodes;
 }
@@ -47,7 +49,7 @@ function findHeaders(element: Parse5Node): Parse5Node[]
         headers.push(element);
 
     // Add the child nodes
-    for (let child of element.childNodes)
+    for (let child of element.childNodes ?? [])
     {
         headers = [...headers, ...findHeaders(child)];
     }
@@ -102,11 +104,33 @@ function getNextNode(headers: Parse5Node[]): ITreeNode
     }
 
     return {
-        text: parent.textContent ?? "",
-        url: "#" + parent.id,
+        text: getText(parent),
+        url: "#" + getId(parent),
 
         children: children.length > 0 ? children : undefined,
     }
+}
+
+function getText(header: Parse5Node): string
+{
+    for (let child of header.childNodes ?? [])
+    {
+        if (child.nodeName == "#text")
+            return child.value ?? "";
+    }
+
+    return "";
+}
+
+function getId(header: Parse5Node): string
+{
+    for (let attr of header.attrs ?? [])
+    {
+        if (attr.name == "id")
+            return attr.value;
+    }
+
+    return "ERROR"
 }
 
 function getHeaderDepth(header: Parse5Node)

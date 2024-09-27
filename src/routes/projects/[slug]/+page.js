@@ -20,10 +20,9 @@ export async function load({ fetch, params })
 
     //let document = parse5.parse(content);
 
-    // @ts-ignore
     let toc = generateTOC(content);
 
-    console.log(content);
+    //console.log(content);
 
     //let page = new DOMParser().parseFromString(content, "text/xml");
     //let page = 
@@ -35,7 +34,7 @@ export async function load({ fetch, params })
         title: project.name, 
         content: content, 
 
-        //toc: toc,
+        toc: toc,
         //page: page,
         
         icon: project.icon,
