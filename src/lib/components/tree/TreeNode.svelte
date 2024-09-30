@@ -9,7 +9,7 @@
 </script>
 
 <details {open}>
-    <summary><a href={node.url}>{node.text}</a></summary>
+    <summary class={node.children ? "" : "childless"}><a href={node.url}>{node.text}</a></summary>
 
     <div>
         {#if node.children}
@@ -33,5 +33,9 @@
 
     a:hover {
         text-decoration: underline;
+    }
+
+    summary.childless {
+        list-style: none;
     }
 </style>

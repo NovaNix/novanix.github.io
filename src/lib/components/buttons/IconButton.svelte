@@ -6,10 +6,37 @@
 
 </script>
 
-<span>
+<span><a href={url}>
 	<!-- svelte-ignore a11y-missing-attribute -->
 	<img src={icon}/>
 	{#if label}
 		<span>{label}</span>
 	{/if}
-</span>
+</a></span>
+
+<style>
+	span {
+		display: inline-block;
+		color: var(--text-color);
+		text-decoration: none;
+		/* height: 25px; */
+	}
+
+	a span {
+		margin-left: 5px;
+	}
+
+	a {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		text-decoration: none;
+
+		flex-direction: row;
+		align-items: center;
+	}
+
+	img {
+		height: 25px;
+	}
+</style>
