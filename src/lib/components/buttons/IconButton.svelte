@@ -36,6 +36,10 @@
 		align-items: center;
 	}
 
+	a:hover {
+		text-decoration: underline;
+	}
+
 	img {
 		height: 25px;
 	}

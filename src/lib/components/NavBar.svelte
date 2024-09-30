@@ -50,7 +50,10 @@
 			{/each}
 		</ul>
 	</nav>
-	<ThemeToggle/>
+	<div id="header-right">
+		<ThemeToggle/>
+	</div>
+	
 </header>
 
 
@@ -63,13 +66,28 @@
 		display: flex;
 	}
 
+	#header-right {
+		height: 100%;
+		margin-left: auto;
+		margin-right: 10px;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		
+	}
+
 	nav {
 		height: 100%;
 	}
 
 	h1 {
 		padding: 0;
-		margin: 0;
+		margin: 0 10px;
+
+		height: 100%;
+		line-height: 56px;
 	}
 
 	ul {
