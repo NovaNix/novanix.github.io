@@ -1,13 +1,13 @@
 import { ProjectStatus, type Project } from "$lib/data/project";
 
 import File from "./content.md?url";
-//import Icon from "./icon.jpg"
+import Icon from "./icon.png"
 
 const project: Project = {
     name: "K.K. Radio",
     id: "kk-radio",
     description: "",
-    icon: "https://dodo.ac/np/images/e/e2/Portable_Radio_%28White%29_NH_Icon.png",
+    icon: Icon,
     status: ProjectStatus.Finished,
     file: File,
     github: "https://github.com/NovaNix/kk-radio",
