@@ -1,4 +1,4 @@
-import { ProjectStatus, type Project } from "$lib/types/projecttypes";
+import { ProjectStatus, type Project } from "$lib/data/project";
 
 import File from "./content.md?url";
 import Icon from "./icon.jpg"

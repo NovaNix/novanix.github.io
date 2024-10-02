@@ -1,7 +1,7 @@
 <script lang="ts">
     import Article from "$lib/components/Article.svelte";
     import ProjectCard from "$lib/components/ProjectCard.svelte";
-    import { projects } from "$lib/data/projects";
+    import { projects } from "$lib/data/project-list";
     import type { DisplayMode } from "$lib/types/types";
 
     let mode: DisplayMode = "grid";

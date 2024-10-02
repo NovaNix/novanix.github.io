@@ -1,4 +1,4 @@
-import { getProject, projects } from '$lib/data/projects';
+import { getProject, projects } from '$lib/data/project-list';
 import { generateTOC } from '$lib/utils/tableofcontents';
 import { marked } from 'marked';
 import { gfmHeadingId } from 'marked-gfm-heading-id';

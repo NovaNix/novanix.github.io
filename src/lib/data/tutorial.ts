@@ -5,7 +5,7 @@ export interface Tutorial
 
 }
 
-export interface TutorialArticle
+export interface TutorialNode
 {
     title: string,
     slug: string,

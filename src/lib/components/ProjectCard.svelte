@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Project } from "$lib/data/projects";
+    import type { Project } from "$lib/data/project";
     import type { DisplayMode } from "$lib/types/types";
 
     export let project: Project;
