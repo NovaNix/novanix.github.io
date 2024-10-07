@@ -9,9 +9,6 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
 {
     let frontmatter = extractFrontmatter(markdown);
 
-    console.log("got frontmatter:");
-    console.log(frontmatter);
-
     // we need to remove the frontmatter to prevent issues when parsing the markdown
     markdown = removeFrontmatter(markdown);
 
