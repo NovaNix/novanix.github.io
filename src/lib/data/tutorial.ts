@@ -1,16 +1,28 @@
-export interface Tutorial
+export interface Tutorial extends ITutorialNode
 {
-    title: string,
-    slug: string,
-
+    
 }
 
-export interface TutorialNode
+export interface ITutorialNode
 {
     title: string,
     slug: string,
 
     file?: string,
 
-    children: TutorialNode[]
+    children?: ITutorialNode[]
+}
+
+export function fileTutorial(title: string, slug: string, file: string): ITutorialNode
+{
+    console.log("making file tutorial");
+    console.log("url: " + import.meta.url);
+
+    return {
+        title,
+        slug,
+
+        file
+        //file: new URL(`./${slug}.md`, import.meta.url).href
+    }
 }

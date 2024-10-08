@@ -4,11 +4,23 @@
 
 	export let title: string;
 	export let icon: string | null = null;
+
+	export let sideTreeTitle: string | null = null;
+	export let sideTree: ITreeNode[] | null = null;
+
 	export let toc: ITreeNode[] | null = null;
 
 </script>
 
 <main>
+
+	{#if sideTree && sideTree.length > 0}
+	<aside>
+		<h1>{sideTreeTitle}</h1>
+		<Tree roots={sideTree}/>
+	</aside>
+	{/if}
+
 	<article>
 		<hgroup>
 			<!-- svelte-ignore a11y-missing-attribute -->
@@ -24,7 +36,7 @@
 		<slot></slot>
 	</article>
 	
-	{#if toc}
+	{#if toc && toc.length > 0}
 	<aside>
 		<h1>Table of Contents</h1>
 		<Tree roots={toc}/>
