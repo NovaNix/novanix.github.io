@@ -1,10 +1,38 @@
 import YAML from 'yaml'
 import { marked } from 'marked';
 import { gfmHeadingId } from 'marked-gfm-heading-id';
+import { decodeDataURL } from './base64';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
-//const frontmatterRegex = /^---((?:\n|.)*?)---/
 
+type fetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+
+/**
+ * Takes a URL and reads the markdown from that file. 
+ * This exists because Vite will occasionally decide to turn urls into data urls, which break the fetch provided by Sveltekit
+ * @param url 
+ * @param ufetch 
+ * @returns 
+ */
+export async function readMarkdown(url: string, ufetch: fetch): Promise<string>
+{
+    // Check to see if the url is base64
+    if (url.startsWith("data:"))
+    {
+        return decodeDataURL(url) ?? "";
+    }
+
+    else
+    {
+        return (await ufetch(url)).text();
+    }
+}
+
+/**
+ * Takes a markdown string and converts it to HTML, while extracting the frontmatter
+ * @param markdown 
+ * @returns The HTML string, along with the frontmatter of the markdown 
+ */
 export async function parseMarkdown(markdown: string): Promise<[string, object]>
 {
     let frontmatter = extractFrontmatter(markdown);

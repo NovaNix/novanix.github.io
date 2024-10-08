@@ -1,5 +1,5 @@
 import { getProject, projects } from '$lib/data/project-list';
-import { parseMarkdown } from '$lib/utils/markdown';
+import { parseMarkdown, readMarkdown } from '$lib/utils/markdown';
 import { generateTOC } from '$lib/utils/tableofcontents';
 
 /** @type {import('./$types').PageLoad} */
@@ -10,7 +10,7 @@ export async function load({ fetch, params })
     if (project == null)
         throw new Error("INVALID PROJECT ID");
 
-    let markdown = await (await fetch(project.file)).text();
+    let markdown = await readMarkdown(project.file, fetch);
 
     let [content, frontmatter] = await parseMarkdown(markdown);
 
