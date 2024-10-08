@@ -13,7 +13,7 @@
     {#if data.content}
         {@html data.content}
     {:else}
-        {#each data.tutorial.children ?? [] as child}
+        {#each data.page.children ?? [] as child}
             <a href={`/tutorials/${data.path}/${child.slug}`}>{child.title}</a><br/>
         {/each}
     {/if}
