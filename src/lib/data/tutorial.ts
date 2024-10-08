@@ -10,7 +10,7 @@ export interface TutorialNode
     title: string,
     slug: string,
 
-    file: string,
+    file?: string,
 
-    
+    children: TutorialNode[]
 }
