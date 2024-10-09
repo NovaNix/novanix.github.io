@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { ITreeNode } from "$lib/types/treetypes";
     import type { LabeledLink } from "$lib/types/types";
+    import Breadcrumb from "./Breadcrumb.svelte";
     import PrevNextBar from "./PrevNextBar.svelte";
     import Tree from "./tree/Tree.svelte";
 
@@ -13,6 +14,8 @@
 	export let prev: LabeledLink | null = null;
 	export let next: LabeledLink | null = null;
 
+	export let crumbs: LabeledLink[] | null;
+
 	export let toc: ITreeNode[] | null = null;
 
 </script>
@@ -21,28 +24,44 @@
 
 	{#if sideTree && sideTree.length > 0}
 	<aside>
-		<h1>{sideTreeTitle}</h1>
+		<!-- <h1>{sideTreeTitle}</h1> -->
 		<Tree roots={sideTree}/>
 		{#if prev || next}
-			<PrevNextBar {prev} {next}/>
+			<hr/>
+			<PrevNextBar {prev} {next} shrunk/>
 		{/if}
 	</aside>
 	{/if}
 
-	<article>
-		<hgroup>
-			<!-- svelte-ignore a11y-missing-attribute -->
-			{#if icon}<img src={icon}/>{/if}
-			<div id="header-text">
-				<h1>{title}</h1>
-				<div id="links">
-					<slot name="links"></slot>
+	<div id="article-body">
+		{#if crumbs}
+			<Breadcrumb {crumbs}/>
+		{/if}
+
+		<article>
+			<hgroup>
+				<!-- svelte-ignore a11y-missing-attribute -->
+				{#if icon}<img src={icon}/>{/if}
+				<div id="header-text">
+					<h1>{title}</h1>
+					<div id="links">
+						<slot name="links"></slot>
+					</div>
 				</div>
-			</div>
-		</hgroup>
-		
-		<slot></slot>
-	</article>
+			</hgroup>
+			
+			<slot></slot>
+
+			<footer>
+				
+				{#if prev || next}
+					<hr/>
+					<PrevNextBar {prev} {next}/>
+				{/if}
+			</footer>
+		</article>
+	</div>
+	
 	
 	{#if toc && toc.length > 0}
 	<aside>
@@ -69,14 +88,22 @@
 		position: relative; /* For sticky */
 	}
 
-	article {
+	#article-body {
 		width: 100%; /* TODO CHANGE LATER */
 		max-width: 1012px;
+	}
+
+	article {
+		
     	/* margin-left: auto;
     	margin-right: auto; */
 
     	background-color: var(--background-color);
 		padding: 20px;
+
+		width: 100%;
+
+		box-sizing: border-box;
 	}
 
 	aside {
@@ -100,6 +127,11 @@
 
 		border-bottom: 1px solid var(--divider-color);
 		
+	}
+
+	hr {
+		border: 0;
+		border-bottom: 1px solid var(--divider-color);
 	}
 
 	#header-text {

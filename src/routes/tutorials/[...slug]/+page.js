@@ -13,16 +13,18 @@ export async function load({ fetch, params })
     if (tutorial == null || page == null)
         error(404, {
 			message: 'Not found'
-		});
+	});
 
-    const sideTree = toTreeNode(tutorial).children;
+    const sideTree = [toTreeNode(tutorial)];
 
     const [prevPage, nextPage] = getSiblingTutorials(tutorial, page);
     let prev = prevPage ? {name: prevPage.title, url: prevPage.url} : null;
     let next = nextPage ? {name: nextPage.title, url: nextPage.url} : null;
 
-    console.log(prev);
-    console.log(next);
+    let crumbs = getBreadcrumbs(page);
+
+    //console.log(prev);
+    //console.log(next);
 
     // Extract the article contents
     
@@ -54,10 +56,37 @@ export async function load({ fetch, params })
         prev,
         next,
 
+        crumbs,
+
         toc,
 
         path: params.slug
     };
+}
+
+/**
+ * 
+ * @param {import('$lib/data/tutorial').ITutorialNode} page 
+ */
+function getBreadcrumbs(page)
+{
+    /** @type {import('$lib/types/types').LabeledLink[]} */
+    let crumbs = [];
+
+    /** @type {import('$lib/data/tutorial').ITutorialNode | null} */
+    let next = page;
+
+    while (next != null)
+    {
+        crumbs.push({
+            name: next.title,
+            url: next.url
+        });
+
+        next = next.parent;
+    }
+
+    return crumbs.toReversed();
 }
 
 /** @type {import('./$types').EntryGenerator} */

@@ -9,7 +9,7 @@
     <!-- <link rel="icon" href={data.favicon} /> -->
 </svelte:head>
 
-<Article title={data.page.title} sideTreeTitle={data.sideTreeTitle} sideTree={data.sideTree} toc={data.toc} prev={data.prev} next={data.next}>
+<Article title={data.page.title} sideTreeTitle={data.sideTreeTitle} sideTree={data.sideTree} toc={data.toc} prev={data.prev} next={data.next} crumbs={data.crumbs}>
     {#if data.content}
         {@html data.content}
     {:else}
