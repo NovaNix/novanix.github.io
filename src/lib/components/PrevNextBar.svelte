@@ -1,8 +1,11 @@
 <script lang="ts">
     import type { LabeledLink } from "$lib/types/types";
 
-	import BackArrow from "$lib/assets/icons/material-icons/arrow_back.svg";
-	import ForwardArrow from "$lib/assets/icons/material-icons/arrow_forward.svg";
+	import RightArrow from "svelte-material-icons/ArrowRight.svelte"
+	import LeftArrow from "svelte-material-icons/ArrowLeft.svelte"
+
+	// import BackArrow from "$lib/assets/icons/material-icons/arrow_back.svg";
+	// import ForwardArrow from "$lib/assets/icons/material-icons/arrow_forward.svg";
 
 	export let prev: LabeledLink | null;
 	export let next: LabeledLink | null;
@@ -15,8 +18,14 @@
 
 
 <section>
-	<div>{#if prev}<a href={prev.url}><img src={BackArrow}/>{prevLabel}</a>{/if}</div>
-	<div>{#if next}<a href={next.url}>{nextLabel}<img src={ForwardArrow}/></a>{/if}</div>
+	<div>{#if prev}<a href={prev.url}>
+		<LeftArrow/>
+		{prevLabel}
+	</a>{/if}</div>
+	<div>{#if next}<a href={next.url}>
+		{nextLabel}
+		<RightArrow/>
+	</a>{/if}</div>
 </section>
 
 <style>
@@ -27,9 +36,6 @@
 
 	div, a {
 		display: flex;
-	}
-
-	img {
-		height: 100%;
+		align-items: center;
 	}
 </style>
