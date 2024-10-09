@@ -14,7 +14,7 @@
 	export let prev: LabeledLink | null = null;
 	export let next: LabeledLink | null = null;
 
-	export let crumbs: LabeledLink[] | null;
+	export let crumbs: LabeledLink[] | null = null;
 
 	export let toc: ITreeNode[] | null = null;
 
