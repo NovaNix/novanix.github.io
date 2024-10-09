@@ -1,5 +1,7 @@
 <script lang="ts">
     import type { ITreeNode } from "$lib/types/treetypes";
+    import type { LabeledLink } from "$lib/types/types";
+    import PrevNextBar from "./PrevNextBar.svelte";
     import Tree from "./tree/Tree.svelte";
 
 	export let title: string;
@@ -7,6 +9,9 @@
 
 	export let sideTreeTitle: string | null = null;
 	export let sideTree: ITreeNode[] | null = null;
+
+	export let prev: LabeledLink | null = null;
+	export let next: LabeledLink | null = null;
 
 	export let toc: ITreeNode[] | null = null;
 
@@ -18,6 +23,9 @@
 	<aside>
 		<h1>{sideTreeTitle}</h1>
 		<Tree roots={sideTree}/>
+		{#if prev || next}
+			<PrevNextBar {prev} {next}/>
+		{/if}
 	</aside>
 	{/if}
 

@@ -5,5 +5,5 @@
 
 Tutorials:
 {#each tutorials as tutorial}
-    <a href={`tutorials/${tutorial.slug}`}>{tutorial.title}</a>
+    <a href={tutorial.url}>{tutorial.title}</a>
 {/each}

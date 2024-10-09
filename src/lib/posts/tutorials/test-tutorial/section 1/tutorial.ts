@@ -1,9 +1,9 @@
-import { fileTutorial, type ITutorialNode, type Tutorial } from "$lib/data/tutorial"
+import { fileTutorial, type ITutorialNode, type PartialTutorialNode, type Tutorial } from "$lib/data/tutorial"
 
 import tut1 from "./tut1.md?url";
 import tut2 from "./tut2.md?url";
 
-const tutorial: ITutorialNode = {
+const tutorial: PartialTutorialNode = {
     title: "Section 1",
     slug: "section-1",
 

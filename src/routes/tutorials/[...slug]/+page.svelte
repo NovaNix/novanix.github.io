@@ -9,12 +9,12 @@
     <!-- <link rel="icon" href={data.favicon} /> -->
 </svelte:head>
 
-<Article title={data.page.title} sideTreeTitle={data.sideTreeTitle} sideTree={data.sideTree} toc={data.toc}>
+<Article title={data.page.title} sideTreeTitle={data.sideTreeTitle} sideTree={data.sideTree} toc={data.toc} prev={data.prev} next={data.next}>
     {#if data.content}
         {@html data.content}
     {:else}
         {#each data.page.children ?? [] as child}
-            <a href={`/tutorials/${data.path}/${child.slug}`}>{child.title}</a><br/>
+            <a href={child.url}>{child.title}</a><br/>
         {/each}
     {/if}
 </Article>

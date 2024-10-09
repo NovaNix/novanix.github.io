@@ -1,10 +1,10 @@
-import type { Tutorial } from "$lib/data/tutorial"
+import { completeTutorial, type Tutorial } from "$lib/data/tutorial"
 
 import File from "./intro.md?url";
 
 import Section1 from "./section 1/tutorial"
 
-const tutorial: Tutorial = {
+const tutorial: Tutorial = completeTutorial({
     title: "Test Tutorial",
     slug: "test-tutorial",
 
@@ -13,6 +13,6 @@ const tutorial: Tutorial = {
     children: [
         Section1
     ]
-};
+});
 
 export default tutorial;

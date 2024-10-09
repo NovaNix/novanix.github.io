@@ -1,4 +1,4 @@
-import { getRootTutorial, getTutorialPage, toTreeNode, tutorials } from '$lib/data/tutorial-list';
+import { getRootTutorial, getSiblingTutorials, getTutorialPage, toTreeNode, tutorials } from '$lib/data/tutorial-list';
 import { parseMarkdown, readMarkdown } from '$lib/utils/markdown';
 import { generateTOC } from '$lib/utils/tableofcontents';
 import { error } from '@sveltejs/kit';
@@ -7,15 +7,22 @@ import { error } from '@sveltejs/kit';
 export async function load({ fetch, params })
 {
     //console.log("slug: " + params.slug);
-    let tutorial = getRootTutorial(params.slug);
-    let page = getTutorialPage(params.slug);
+    const tutorial = getRootTutorial(params.slug);
+    const page = getTutorialPage(params.slug);
 
     if (tutorial == null || page == null)
         error(404, {
 			message: 'Not found'
 		});
 
-    let sideTree = toTreeNode(tutorial, null).children;
+    const sideTree = toTreeNode(tutorial).children;
+
+    const [prevPage, nextPage] = getSiblingTutorials(tutorial, page);
+    let prev = prevPage ? {name: prevPage.title, url: prevPage.url} : null;
+    let next = nextPage ? {name: nextPage.title, url: nextPage.url} : null;
+
+    console.log(prev);
+    console.log(next);
 
     // Extract the article contents
     
@@ -43,6 +50,9 @@ export async function load({ fetch, params })
 
         sideTreeTitle: tutorial.title,
         sideTree,
+
+        prev,
+        next,
 
         toc,
 
