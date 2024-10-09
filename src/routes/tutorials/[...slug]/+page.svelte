@@ -1,4 +1,5 @@
 <script>
+    import "$lib/assets/markdown.scss"
     import Article from '$lib/components/Article.svelte';
 
     export let data;
@@ -11,7 +12,7 @@
 
 <Article title={data.page.title} sideTreeTitle={data.sideTreeTitle} sideTree={data.sideTree} toc={data.toc} prev={data.prev} next={data.next} crumbs={data.crumbs}>
     {#if data.content}
-        {@html data.content}
+        <div class="markdown">{@html data.content}</div>
     {:else}
         {#each data.page.children ?? [] as child}
             <a href={child.url}>{child.title}</a><br/>
@@ -19,12 +20,6 @@
     {/if}
 </Article>
 
-<!-- {data.tutorial.title}
-{data.path}
-
-{data.tutorial.file ?? "no file"}
-
-Child Tutorials:
-{#each data.tutorial.children ?? [] as child}
-    <a href={`/tutorials/${data.path}/${child.slug}`}>{child.title}</a>
-{/each} -->
+<style lang="scss">
+    //@import "$lib/assets/markdown.scss";
+</style>

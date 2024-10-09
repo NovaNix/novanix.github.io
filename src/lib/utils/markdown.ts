@@ -2,6 +2,7 @@ import YAML from 'yaml'
 import { marked } from 'marked';
 import { gfmHeadingId } from 'marked-gfm-heading-id';
 import { decodeDataURL } from './base64';
+import markedAlert from 'marked-alert';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
 
@@ -44,6 +45,7 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     
     // configure marked
     marked.use(gfmHeadingId()); // Add unique IDs to headers
+    marked.use(markedAlert()); // Add GitHub markdown alerts
 
     let html = await marked.parse(markdown);
 
@@ -57,7 +59,7 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
  */
 export function extractFrontmatter(markdown: string): object
 {
-    console.log(markdown);
+    //console.log(markdown);
     if (frontmatterRegex.test(markdown))
     {
         let matches = markdown.match(frontmatterRegex);

@@ -22,17 +22,6 @@
 
 <main>
 
-	{#if sideTree && sideTree.length > 0}
-	<aside>
-		<!-- <h1>{sideTreeTitle}</h1> -->
-		<Tree roots={sideTree}/>
-		{#if prev || next}
-			<hr/>
-			<PrevNextBar {prev} {next} shrunk/>
-		{/if}
-	</aside>
-	{/if}
-
 	<div id="article-body">
 		{#if crumbs}
 			<Breadcrumb {crumbs}/>
@@ -62,35 +51,159 @@
 		</article>
 	</div>
 	
+	<div id="page-nav">
+
+		{#if sideTree && sideTree.length > 0}
+		<aside class="nav-tree">
+			<!-- <h1>{sideTreeTitle}</h1> -->
+			<Tree roots={sideTree}/>
+			{#if prev || next}
+				<hr/>
+				<PrevNextBar {prev} {next} shrunk/>
+			{/if}
+		</aside>
+		{/if}
+
+		{#if toc && toc.length > 0}
+		<aside class="toc">
+			<h1>Table of Contents</h1>
+			<Tree roots={toc}/>
+		</aside>
+		{/if}
+	</div>
 	
-	{#if toc && toc.length > 0}
-	<aside>
-		<h1>Table of Contents</h1>
-		<Tree roots={toc}/>
-	</aside>
-	{/if}
+	
 </main>
 
 
 <style>
 
 	main {
-		display: flex;
+		/* display: flex;
 		flex-direction: row;
 
 		justify-content: center;
 		align-items: flex-start;
 
-		gap: 10px;
+		gap: 10px; */
+		display: grid; 
+		gap: 10px 10px; 
 
 		padding: 20px;
 
 		position: relative; /* For sticky */
+
+		overflow: auto;
+	}
+
+	/* Mobile Layout */
+
+	@media screen {
+		
+		main {
+			grid-template-columns: 100%; 
+  			grid-template-rows: 1fr; 
+  			grid-template-areas: 
+  			  "content"; 
+		}
+		
+		/* Hide the sidebars */
+		/* TODO: add buttons you can click to have them show up */
+
+		#page-nav {
+			display: none;
+		}
+
+		/* .nav-tree {
+			display: none;
+		}
+
+		.toc {
+			display: none;
+		} */
+	}
+
+	/* Compact Layout */
+
+	@media screen and (min-width: 50rem) {
+		main {
+			/* grid-template-columns: min-content 1fr; 
+  			grid-template-rows: min-content min-content; 
+  			grid-template-areas: 
+    		"toc content"
+    		"nav-tree content";  */
+
+			grid-template-columns: min-content 1fr; 
+  			grid-template-rows: min-content; 
+  			/* gap: 0px 0px;  */
+  			grid-template-areas: 
+  			  "sidebar content"; 
+		}
+
+		#page-nav {
+			display: block;
+
+			position: sticky;
+			top: 10px;
+
+			height: fit-content;
+			max-height: calc(100vh - 20px);
+
+			overflow: auto;
+			scrollbar-width: thin;
+			
+
+			display: grid; 
+  			grid-template-columns: 1fr; 
+  			grid-template-rows: min-content; 
+  			gap: 0px 0px; 
+  			grid-template-areas: 
+    			"toc"
+    			"nav-tree"; 
+  			grid-area: sidebar; 
+		}
+
+		/* .nav-tree {
+			display: block;
+		}
+
+		.toc {
+			display: block;
+		} */
+	}
+
+	/* Fullsize Layout */
+
+	@media screen and (min-width: 70rem) {
+		main {
+			
+  			grid-template-columns: min-content auto min-content; 
+  			grid-template-rows: 1fr; 
+  			
+
+  			grid-template-areas: 
+    		"nav-tree content toc"; 
+		}
+
+		#page-nav {
+			display: contents;
+		}
+
+		.nav-tree, .toc {
+			display: block;
+			position: sticky;
+
+			top: 10px;
+			width: max-content;
+		}
+
 	}
 
 	#article-body {
 		width: 100%; /* TODO CHANGE LATER */
 		max-width: 1012px;
+
+		grid-area: content;
 	}
 
 	article {
@@ -102,18 +215,27 @@
 		padding: 20px;
 
 		width: 100%;
+		min-width: fit-content;
 
 		box-sizing: border-box;
+
+		overflow-x: auto;
+	}
+
+	.nav-tree {
+		grid-area: nav-tree;
+	}
+
+	.toc {
+		grid-area: toc;
 	}
 
 	aside {
 		background-color: var(--background-color);
 		padding: 20px;
 
-		width: max-content;
-
-		position: sticky;
-		top: 0px;
+		/* width: max-content; */
+		height: fit-content;
 	}
 
 	img {

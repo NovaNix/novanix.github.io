@@ -1,12 +1,14 @@
 <script lang="ts">
     import type { ITreeNode } from "$lib/types/treetypes";
 
+    import { page } from '$app/stores';  
+    
     export let node: ITreeNode;
 
     export let open: boolean = true;
     export let depth: number;
 
-    $: isCurrentPage = node.url == window.location.pathname;
+    $: isCurrentPage = node.url == $page.url.pathname;
 
 </script>
 

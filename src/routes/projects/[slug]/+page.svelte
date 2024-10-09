@@ -17,5 +17,9 @@
         {#if data.project.url}<WebsiteButton url={data.project.url ?? ""} label/>{/if}
     </svelte:fragment>
 	
-    {@html data.content}
+    <div class="markdown">{@html data.content}</div>
 </Article>
+
+<style lang="scss">
+    @import "$lib/assets/markdown.scss";
+</style>

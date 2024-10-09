@@ -1,10 +1,12 @@
 import type { ITutorialNode, Tutorial } from "./tutorial";
 
 import TestTutorial from "$lib/posts/tutorials/test-tutorial/tutorial"
+import NeocitiesQuickstart from "$lib/posts/tutorials/neocities-quickstart/tutorial"
 import type { ITreeNode } from "$lib/types/treetypes";
 
 export const tutorials: Tutorial[] = [
-    TestTutorial
+    TestTutorial,
+    NeocitiesQuickstart
     
 ]
 
