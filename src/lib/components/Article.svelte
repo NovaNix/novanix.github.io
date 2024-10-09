@@ -92,8 +92,6 @@
 		padding: 20px;
 
 		position: relative; /* For sticky */
-
-		overflow: auto;
 	}
 
 	/* Mobile Layout */
