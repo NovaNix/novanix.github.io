@@ -6,10 +6,12 @@
     export let open: boolean = true;
     export let depth: number;
 
+    $: isCurrentPage = node.url == window.location.pathname;
+
 </script>
 
 <details {open}>
-    <summary class={node.children ? "" : "childless"}><a href={node.url}>{node.text}</a></summary>
+    <summary class={node.children ? "" : "childless"}><a href={node.url} class={isCurrentPage ? "currentPage" : ""}>{node.text}</a></summary>
 
     <div>
         {#if node.children}
@@ -32,6 +34,10 @@
     }
 
     a:hover {
+        text-decoration: underline;
+    }
+
+    a.currentPage {
         text-decoration: underline;
     }
 
