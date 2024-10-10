@@ -76,7 +76,9 @@
 </main>
 
 
-<style>
+<style lang="scss">
+
+	$max-size: 1012px;
 
 	main {
 		/* display: flex;
@@ -92,6 +94,9 @@
 		padding: 20px;
 
 		position: relative; /* For sticky */
+
+		justify-content: stretch;
+		/* justify-content: center;  */
 	}
 
 	/* Mobile Layout */
@@ -131,7 +136,7 @@
     		"toc content"
     		"nav-tree content";  */
 
-			grid-template-columns: min-content 1fr; 
+			grid-template-columns: auto 1fr; 
   			grid-template-rows: min-content; 
   			/* gap: 0px 0px;  */
   			grid-template-areas: 
@@ -139,8 +144,6 @@
 		}
 
 		#page-nav {
-			display: block;
-
 			position: sticky;
 			top: 10px;
 
@@ -159,6 +162,8 @@
     			"toc"
     			"nav-tree"; 
   			grid-area: sidebar; 
+
+			justify-self: end;
 		}
 
 		/* .nav-tree {
@@ -175,7 +180,7 @@
 	@media screen and (min-width: 70rem) {
 		main {
 			
-  			grid-template-columns: min-content auto min-content; 
+  			grid-template-columns: auto minmax(min-content, $max-size) auto; 
   			grid-template-rows: 1fr; 
   			
 
@@ -195,11 +200,19 @@
 			width: max-content;
 		}
 
+		.nav-tree {
+			justify-self: end;
+		}
+
+		.toc {
+			justify-self: start;
+		}
+
 	}
 
 	#article-body {
 		width: 100%; /* TODO CHANGE LATER */
-		max-width: 1012px;
+		max-width: $max-size;
 
 		grid-area: content;
 	}
