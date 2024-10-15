@@ -180,7 +180,7 @@
 	@media screen and (min-width: 70rem) {
 		main {
 			
-  			grid-template-columns: auto minmax(min-content, $max-size) auto; 
+  			grid-template-columns: auto minmax(auto, $max-size) auto; 
   			grid-template-rows: 1fr; 
   			
 
@@ -215,6 +215,8 @@
 		max-width: $max-size;
 
 		grid-area: content;
+
+		overflow-x: auto;
 	}
 
 	article {
@@ -226,7 +228,7 @@
 		padding: 20px;
 
 		width: 100%;
-		min-width: fit-content;
+		// min-width: fit-content;
 
 		box-sizing: border-box;
 
