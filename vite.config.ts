@@ -4,6 +4,9 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
 	assetsInclude: [
-		"md"
-	] 
+		"**/*.md"
+	],
+	build: {
+		assetsInlineLimit: 0
+	}
 });

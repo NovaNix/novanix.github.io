@@ -1,6 +1,8 @@
 import { fileTutorial, type ITutorialNode, type PartialTutorialNode, type Tutorial } from "$lib/data/tutorial"
 
-import html_intro from "./0. html-intro.md?url";
+//import e from "$lib/posts/tutorials/neocities-quickstart/"
+
+import html_intro from "./0. html-intro.md";
 import adding_text from "./1. adding-text.md?url";
 import adding_links from "./2. adding-links.md?url";
 

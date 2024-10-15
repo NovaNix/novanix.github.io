@@ -1,6 +1,6 @@
 import { ProjectStatus, type Project } from "$lib/data/project";
 
-import File from "./content.md?url";
+import File from "./content.md";
 import Icon from "./icon.jpg"
 
 const project: Project = {
