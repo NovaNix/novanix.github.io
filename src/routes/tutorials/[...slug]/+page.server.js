@@ -3,7 +3,9 @@ import { parseMarkdown, readMarkdown } from '$lib/utils/markdown';
 import { generateTOC } from '$lib/utils/tableofcontents';
 import { error } from '@sveltejs/kit';
 
-/** @type {import('./$types').PageLoad} */
+import { read } from '$app/server';
+
+/** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch, params })
 {
     //console.log("slug: " + params.slug);
@@ -35,7 +37,9 @@ export async function load({ fetch, params })
 
     if (page.file)
     {
-        let markdown = await readMarkdown(page.file, fetch);
+        let markdown = await read(page.file).text();
+        //let markdown = await readMarkdown(page.file, fetch);
+        //let markdown = await readMarkdown(page.file, );
 
         [content, frontmatter] = await parseMarkdown(markdown);
 
