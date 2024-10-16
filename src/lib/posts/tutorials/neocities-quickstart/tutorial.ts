@@ -1,6 +1,7 @@
 import { completeTutorial, fileTutorial, type Tutorial } from "$lib/data/tutorial"
 
-import HTMLSection from "./1. html/section"
+import HTMLSection from "./1. html/section";
+import CSSSection from "./2. css/section"
 
 import introduction from "./0. introduction.md?url";
 import setup from "./1. neocities-setup.md?url";
@@ -12,7 +13,8 @@ const tutorial: Tutorial = completeTutorial({
     children: [
         fileTutorial("Introduction", "intro", introduction),
         fileTutorial("Setting Up Neocities", "neocities-setup", setup),
-        HTMLSection
+        HTMLSection,
+        CSSSection
     ]
 });
 

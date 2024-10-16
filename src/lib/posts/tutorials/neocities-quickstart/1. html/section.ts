@@ -3,6 +3,7 @@ import { fileTutorial, type ITutorialNode, type PartialTutorialNode, type Tutori
 import html_intro from "./0. html-intro.md?url";
 import adding_text from "./1. adding-text.md?url";
 import adding_links from "./2. adding-links.md?url";
+import adding_images from "./3. adding-images.md?url";
 
 const tutorial: PartialTutorialNode = {
     title: "HTML",
@@ -13,7 +14,8 @@ const tutorial: PartialTutorialNode = {
     children: [
         fileTutorial("HTML Introduction", "html-intro", html_intro),
         fileTutorial("Adding Text", "adding-text", adding_text),
-        fileTutorial("Adding Links", "adding-links", adding_links)
+        fileTutorial("Adding Links", "adding-links", adding_links),
+        fileTutorial("Adding Images", "adding-images", adding_images)
     ]
 };
 
