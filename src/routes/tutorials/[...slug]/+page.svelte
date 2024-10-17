@@ -14,9 +14,13 @@
     {#if data.content}
         <div class="markdown">{@html data.content}</div>
     {:else}
-        {#each data.page.children ?? [] as child}
-            <a href={child.url}>{child.title}</a><br/>
-        {/each}
+        <h2>Pages</h2>
+        <ul>
+            {#each data.page.children ?? [] as child}
+                <li><a href={child.url}>{child.title}</a></li>
+            {/each}
+        </ul>
+        
     {/if}
 </Article>
 

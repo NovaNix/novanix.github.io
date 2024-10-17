@@ -1,9 +1,13 @@
 <script lang="ts">
-    import { tutorials } from "$lib/data/tutorial-list";
+    import Article from "$lib/components/Article.svelte";
+import { tutorials } from "$lib/data/tutorial-list";
 
 </script>
 
-Tutorials:
-{#each tutorials as tutorial}
-    <a href={tutorial.url}>{tutorial.title}</a>
-{/each}
+<Article title="Tutorials">
+    <ul>
+        {#each tutorials as tutorial}
+            <li><a href={tutorial.url}>{tutorial.title}</a></li>
+        {/each}
+    </ul>
+</Article>
