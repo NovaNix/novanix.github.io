@@ -1,8 +1,10 @@
 import YAML from 'yaml'
-import { marked } from 'marked';
+import { Marked } from 'marked';
 import { gfmHeadingId } from 'marked-gfm-heading-id';
 import { decodeDataURL } from './base64';
 import markedAlert from 'marked-alert';
+import { markedHighlight } from 'marked-highlight';
+import hljs from 'highlight.js';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
 
@@ -36,6 +38,8 @@ export async function readMarkdown(url: string, ufetch: fetch): Promise<string>
  */
 export async function parseMarkdown(markdown: string): Promise<[string, object]>
 {
+    const marked = new Marked();
+
     let frontmatter = extractFrontmatter(markdown);
 
     // we need to remove the frontmatter to prevent issues when parsing the markdown
@@ -46,6 +50,15 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     // configure marked
     marked.use(gfmHeadingId()); // Add unique IDs to headers
     marked.use(markedAlert()); // Add GitHub markdown alerts
+
+    marked.use(markedHighlight({
+        emptyLangClass: 'hljs',
+        langPrefix: 'hljs language-',
+        highlight(code, lang, info) {
+          const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+          return hljs.highlight(code, { language }).value;
+        }
+    }))
 
     let html = await marked.parse(markdown);
 
