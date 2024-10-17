@@ -1,5 +1,23 @@
 @import "./alerts.scss";
 
+// Theme Colors
+
+.light-mode {
+    --alert-note-color: lime;
+    --alert-tip-color: yellow;
+    --alert-important-color: blue;
+    --alert-warning-color: red;
+    --alert-caution-color: orange;
+}
+
+.dark-mode {
+    --alert-note-color: lime;
+    --alert-tip-color: yellow;
+    --alert-important-color: blue;
+    --alert-warning-color: red;
+    --alert-caution-color: orange;
+}
+
 .markdown {
 
     pre {

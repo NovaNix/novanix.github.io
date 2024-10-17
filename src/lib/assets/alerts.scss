@@ -1,12 +1,6 @@
 .markdown {
     //background-color: red;
 
-    $note-color: green;
-    $tip-color: yellow;
-    $important-color: blue;
-    $warning-color: red;
-    $caution-color: orange;
-
     .markdown-alert {
         border: solid black 1px;
         padding: 0 10px;
@@ -23,25 +17,25 @@
     }
 
     .markdown-alert-note {
-        background-color: $note-color;
+        background-color: var(--alert-note-color);
     }
 
     .markdown-alert-tip {
-        background-color: $tip-color;
+        background-color: var(--alert-tip-color);
         
     }
 
     .markdown-alert-important {
-        background-color: $important-color;
+        background-color: var(--alert-important-color);
         
     }
 
     .markdown-alert-warning {
-        background-color: $warning-color;
+        background-color: var(--alert-warning-color);
         
     }
 
     .markdown-alert-caution {
-        background-color: $caution-color;
+        background-color: var(--alert-caution-color);
     }
 }
