@@ -3,7 +3,7 @@ import { fileTutorial, type ITutorialNode, type PartialTutorialNode, type Tutori
 import css_intro from "./0. css-intro.md?url";
 import selectors from "./1. selectors.md?url";
 import basic_styling from "./2. basic-styling.md?url";
-import basic_positioning from "./3. basic-positioning.md?url";
+import basic_layout from "./3. basic-layout.md?url";
 
 const tutorial: PartialTutorialNode = {
     title: "CSS",
@@ -15,7 +15,7 @@ const tutorial: PartialTutorialNode = {
         fileTutorial("CSS Introduction", "css-intro", css_intro),
         fileTutorial("Selectors", "selectors", selectors),
         fileTutorial("Basic Styling", "basic-styling", basic_styling),
-        fileTutorial("Basic Positioning", "basic-positioning", basic_positioning)
+        fileTutorial("Basic Layout", "basic-layout", basic_layout)
     ]
 };
 
