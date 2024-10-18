@@ -3,7 +3,12 @@
     import type { LabeledLink } from "$lib/types/types";
     import Breadcrumb from "./Breadcrumb.svelte";
     import PrevNextBar from "./PrevNextBar.svelte";
+    import ThemeInjector from "./ThemeInjector.svelte";
     import Tree from "./tree/Tree.svelte";
+
+	import DarkCode from "$lib/assets/themes/dark_code"
+    import LightCode from "$lib/assets/themes/light_code"
+	import { Theme } from "$lib/theme/theme";
 
 	export let title: string;
 	export let icon: string | null = null;
@@ -72,7 +77,8 @@
 		{/if}
 	</div>
 	
-	
+	<ThemeInjector themeCode={LightCode} theme={Theme.Light}/>
+	<ThemeInjector themeCode={DarkCode} theme={Theme.Dark}/>
 </main>
 
 
