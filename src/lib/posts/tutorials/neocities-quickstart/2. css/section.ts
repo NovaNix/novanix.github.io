@@ -15,7 +15,7 @@ const tutorial: PartialTutorialNode = {
         fileTutorial("CSS Introduction", "css-intro", css_intro),
         fileTutorial("Selectors", "selectors", selectors),
         fileTutorial("Basic Styling", "basic-styling", basic_styling),
-        fileTutorial("Basic Layout", "basic-layout", basic_layout)
+        //fileTutorial("Basic Layout", "basic-layout", basic_layout)
     ]
 };
 
