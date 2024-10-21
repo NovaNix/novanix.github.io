@@ -2,12 +2,20 @@
 
 // Theme Colors
 
+$alert-transparency: 50%;
+
 .light-mode {
     --alert-note-color: lime;
     --alert-tip-color: yellow;
     --alert-important-color: blue;
     --alert-warning-color: red;
     --alert-caution-color: orange;
+
+    --alert-note-color-background: color-mix(in srgb, var(--alert-note-color), transparent 75%);
+    --alert-tip-color-background: color-mix(in srgb, var(--alert-tip-color), transparent 75%);
+    --alert-important-color-background: color-mix(in srgb, var(--alert-important-color), transparent 75%);
+    --alert-warning-color-background: color-mix(in srgb, var(--alert-warning-color), transparent 75%);
+    --alert-caution-color-background: color-mix(in srgb, var(--alert-caution-color), transparent 75%);
 }
 
 .dark-mode {
@@ -16,13 +24,38 @@
     --alert-important-color: blue;
     --alert-warning-color: red;
     --alert-caution-color: orange;
+
+    --alert-note-color-background: color-mix(in srgb, var(--alert-note-color), transparent 80%);
+    --alert-tip-color-background: color-mix(in srgb, var(--alert-tip-color), transparent 80%);
+    --alert-important-color-background: color-mix(in srgb, var(--alert-important-color), transparent 80%);
+    --alert-warning-color-background: color-mix(in srgb, var(--alert-warning-color), transparent 80%);
+    --alert-caution-color-background: color-mix(in srgb, var(--alert-caution-color), transparent 80%);
 }
 
 .markdown {
 
-    pre {
-        
+    img {
+        width: 100%;
+        height: auto;
     }
+
+    // // Add a title to images with a title
+
+    // p:has(img[title]) {
+    //     content: attr(title);
+    // }
+
+
+    // pre {
+        
+    // }
+
+    // pre:has(code.language-css)::before
+    // {
+    //     content: "css";
+    //     border: 1px solid var(--border-color);
+    //     padding: 0px 2px;
+    // }
 
     pre code {
         border-width: 1px;
@@ -39,6 +72,18 @@
         box-sizing: border-box;
 
         overflow: auto;
+    }
+
+    // Table Styling
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid;
+        padding: 5px;
     }
 
     // h1 {
