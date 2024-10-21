@@ -5,6 +5,7 @@ import { decodeDataURL } from './base64';
 import markedAlert from 'marked-alert';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
+import markedmermaid from './markedmermaid';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
 
@@ -50,15 +51,17 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     // configure marked
     marked.use(gfmHeadingId()); // Add unique IDs to headers
     marked.use(markedAlert()); // Add GitHub markdown alerts
-
+    
     marked.use(markedHighlight({
         emptyLangClass: 'hljs',
         langPrefix: 'hljs language-',
         highlight(code, lang, info) {
-          const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-          return hljs.highlight(code, { language }).value;
+            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            return hljs.highlight(code, { language }).value;
         }
     }))
+
+    marked.use(markedmermaid);
 
     let html = await marked.parse(markdown);
 
