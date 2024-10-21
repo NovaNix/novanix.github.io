@@ -10,7 +10,6 @@ renderer.code = function ({ text, lang }) {
     }
     else 
     {
-        //return false;
         return '<pre><code>' + text + '</code></pre>';
     }
 };

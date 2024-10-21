@@ -62,7 +62,7 @@ $alert-transparency: 50%;
         border-color: var(--border-color);
         border-style: solid;
 
-        padding: 10px;
+        padding: 10px 10px;
 
         width: 100%;
         // min-width: 100%;
@@ -72,6 +72,32 @@ $alert-transparency: 50%;
         box-sizing: border-box;
 
         overflow: auto;
+    }
+
+    label:has(output.html-preview) {
+        margin-block: 1em;
+        display: block;
+    }
+
+    output.html-preview {
+        border-width: 1px;
+        border-color: var(--border-color);
+        border-style: solid;
+
+        padding: 0px 10px;
+
+        width: 100%;
+        // min-width: 100%;
+        // width: max-content;
+        display: block;
+
+        box-sizing: border-box;
+
+        overflow: auto;
+
+        img {
+            width: 30%;
+        }
     }
 
     // Table Styling

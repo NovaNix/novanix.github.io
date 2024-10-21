@@ -6,6 +6,7 @@ import markedAlert from 'marked-alert';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import markedmermaid from './markedmermaid';
+import markedpreviews from './markedpreviews';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
 
@@ -62,6 +63,7 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     }))
 
     marked.use(markedmermaid);
+    marked.use(markedpreviews);
 
     let html = await marked.parse(markdown);
 
