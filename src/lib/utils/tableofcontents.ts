@@ -103,9 +103,19 @@ function getNextNode(headers: Parse5Node[]): ITreeNode
         children.push(getNextNode(headers));
     }
 
+    const text = getText(parent);
+
+    let id = getId(parent);
+    if (id == "ERROR")
+    {
+        // Something went wrong!!
+        console.warn(`Failed to get ID for header "${text}"`);
+        id = "";
+    }
+
     return {
-        text: getText(parent),
-        url: "#" + getId(parent),
+        text,
+        url: "#" + id,
 
         children: children.length > 0 ? children : undefined,
     }
@@ -124,11 +134,19 @@ function getText(header: Parse5Node): string
 
 function getId(header: Parse5Node): string
 {
+    //console.log(header.nodeName);
+
     for (let attr of header.attrs ?? [])
     {
         if (attr.name == "id")
+        {
+            //console.log("found id " + attr.value);
             return attr.value;
+        }
+            
     }
+
+    //console.log("failed to get id for node: " + header.value)
 
     return "ERROR"
 }
