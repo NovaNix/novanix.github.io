@@ -7,6 +7,7 @@ import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import markedmermaid from './markedmermaid';
 import markedpreviews from './markedpreviews';
+import { renderSvelte } from '$lib/server/markdownsvelte';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
 
@@ -48,7 +49,9 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     markdown = removeFrontmatter(markdown);
 
     // convert the markdown into html
-    
+
+    markdown = renderSvelte(markdown);
+
     // configure marked
     marked.use(gfmHeadingId()); // Add unique IDs to headers
     marked.use(markedAlert()); // Add GitHub markdown alerts
@@ -65,7 +68,13 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     marked.use(markedmermaid);
     marked.use(markedpreviews);
 
+    console.log("PRE PARSE\n------------------------------------------")
+    console.log(markdown);
+
     let html = await marked.parse(markdown);
+
+    console.log("POST PARSE\n------------------------------------------")
+    console.log(html);
 
     return [html, frontmatter];
 }
