@@ -6,7 +6,7 @@ renderer.code = function ({ text, lang }) {
 
     if (lang == "raw-html")
     {
-        return `\n\n<div>\n` + text + "\n</div>\n\n";
+        return `\n\n<slot class="RAW-HTML">\n` + text + "\n</slot>\n\n";
     }
 
     if (lang == "mermaid")

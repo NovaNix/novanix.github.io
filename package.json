@@ -14,6 +14,7 @@
 		"@sveltejs/adapter-static": "^3.0.5",
 		"@sveltejs/kit": "^2.5.27",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"@types/uuid": "^10.0.0",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.5.0",
@@ -30,6 +31,7 @@
 		"parse5": "^7.1.2",
 		"sass": "^1.79.4",
 		"svelte-material-icons": "^3.0.5",
+		"uuid": "^10.0.0",
 		"yaml": "^2.5.1"
 	}
 }

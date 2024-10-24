@@ -33,6 +33,9 @@ export async function load({ fetch, params })
     let content; 
     let frontmatter;
 
+    /** @type {import('$lib/utils/markdownsvelte').RenderedSMDComponent[]} */
+    let renderedComponents = [];
+
     let toc;
 
     if (page.file)
@@ -41,7 +44,9 @@ export async function load({ fetch, params })
         //let markdown = await readMarkdown(page.file, fetch);
         //let markdown = await readMarkdown(page.file, );
 
-        [content, frontmatter] = await parseMarkdown(markdown);
+
+
+        [content, frontmatter, renderedComponents] = await parseMarkdown(markdown);
 
         toc = generateTOC(content);
     }
@@ -64,7 +69,9 @@ export async function load({ fetch, params })
 
         toc,
 
-        path: params.slug
+        path: params.slug,
+
+        renderedComponents 
     };
 }
 

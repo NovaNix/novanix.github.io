@@ -1,8 +1,31 @@
 <script>
     import "$lib/assets/markdown.scss"
     import Article from '$lib/components/Article.svelte';
+    import { getComponent } from "$lib/utils/markdownsvelte";
+    import { hydrate, onMount } from 'svelte';
 
     export let data;
+
+    onMount(() => {
+	    for (let component of data.renderedComponents)
+        {
+            let target = document.getElementById(component.id);
+
+            if (target == null)
+            {
+                console.warn("Failed to find rendered svelte component!!")
+                continue;
+            }
+
+            hydrate(getComponent(component.name), {
+	            target,
+	            props: component.props
+            })
+
+            console.log("Rendered component: " + component.id)
+        }
+	});
+
 </script>
 
 <svelte:head>
