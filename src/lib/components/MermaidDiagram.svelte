@@ -1,45 +1,52 @@
-<script lang="ts">
-    import { onDestroy, onMount, type Snippet } from "svelte";
+<script module>
+    import mermaid from "mermaid"
 
-    //let testProp: string;
+    mermaid.initialize({ startOnLoad: false });
+</script>
+
+<script lang="ts">
+    import { type Snippet } from "svelte";
 
     interface Props {
-		testProp?: string;
-        children?: Snippet;
+        children: Snippet;
 	}
 
-    let { testProp = "NONE!", children }: Props = $props();
+    let { children }: Props = $props();
 
-    let count = $state(0);
+    let content: HTMLElement;
 
-    function onClick()
-    {
-        count += 1;
-    }
+    let diagram = $state("");
 
-    onMount(() => {
-        console.log("Mounting Diagram!!")
-    })
-
-    onDestroy(() => {
-        console.log("Destroying Diagram!!")
-    })
+    $effect(() => {
+		diagram = content.innerText;
+	});
 
 </script>
 
-<div>
-    test!!!
-    got prop: {testProp}
-    <button onclick={onClick}>Click Me! {count}</button>
-
+<div bind:this={content} class="raw-mermaid-diagram">
     {@render children?.()}
+</div>
+<div>
+    <!-- diagram: {diagram} -->
+    {#await mermaid.render('graphDiv', diagram)}
+	<!-- promise is pending -->
+	<p>Loading Diagram...</p>
+    {:then value}
+    	<!-- promise was fulfilled or not a Promise -->
+    	{@html value.svg}
+    {:catch error}
+    	<!-- promise was rejected -->
+    	<p>Failed to load diagram!: {error.message}</p>
+    {/await}
 </div>
 
 <style>
     div {
-        border-color: red;
-        border-width: 5px;
-        border-style: solid;
+        white-space: pre-wrap;
+    }
+
+    .raw-mermaid-diagram {
+        display: none;
     }
 </style>
 

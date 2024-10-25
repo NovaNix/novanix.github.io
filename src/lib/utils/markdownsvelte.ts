@@ -116,7 +116,10 @@ export function renderMarkdown(markdown: string, isRoot: boolean): [string, Rend
 
     }
 
-    return [`<div class="${mdcWrapperClass}">\n\n${html}\n\n</div>`, components];
+    if (blocks.length > 1)
+        html = `<div class="${mdcWrapperClass}">\n\n${html}\n\n</div>\n`
+
+    return [html, components];
 }
 
 function renderComponent(component: SMDComponent): [string, RenderedSMDComponent]
@@ -156,17 +159,19 @@ function renderComponent(component: SMDComponent): [string, RenderedSMDComponent
     {
         childrenSnippet = componentSnippet(renderedComponent);
     }
-        
+     
+    
+
     // Convert the component to HTML
     let output = render(svelteComponent, {
         props: {
             // children: contents,
-            children: childrenSnippet,
+            children: childrenSnippet ?? emptySnippet,
             ...attrProps
         }
     })
 
-    let rendered = `<div class="${mdcWrapperClass}" id="${id}">${output.body}</div>`
+    let rendered = `<div class="${mdcWrapperClass}" id="${id}">\n${output.body}\n</div>\n`
 
     return [rendered, renderedComponent];
 }
@@ -202,7 +207,7 @@ export function hydrateComponent(component: RenderedSMDComponent): ReturnType<ty
 	    target,
 	    props: {
             ...component.props,
-            children: contentsSnippet
+            children: contentsSnippet ?? emptySnippet
         }
     })
 
@@ -210,6 +215,16 @@ export function hydrateComponent(component: RenderedSMDComponent): ReturnType<ty
 
     return result;
 }
+
+const emptySnippet = createRawSnippet(() => {
+    return {
+        render: (): string =>
+        {
+            return "";
+        },
+    }
+})
+
 
 export function componentSnippet(component: RenderedSMDComponent)
 {

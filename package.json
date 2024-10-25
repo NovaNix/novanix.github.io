@@ -28,6 +28,7 @@
 		"marked-alert": "^2.1.0",
 		"marked-gfm-heading-id": "^4.1.0",
 		"marked-highlight": "^2.2.0",
+		"mermaid": "^11.3.0",
 		"parse5": "^7.1.2",
 		"sass": "^1.79.4",
 		"svelte-material-icons": "^3.0.5",
