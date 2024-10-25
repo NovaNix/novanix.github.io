@@ -1,9 +1,11 @@
 import {render} from "svelte/server"
 import { v4 as uuidv4 } from "uuid"
-
-import MermaidDiagram from "$lib/components/MermaidDiagram.svelte"
 import { createRawSnippet, hydrate, unmount, type Snippet } from "svelte";
 import { HTMLElements } from "./htmlutils";
+
+import MermaidDiagram from "$lib/components/MermaidDiagram.svelte"
+import CodeEditor from "$lib/components/coding/CodeEditor.svelte";
+import EditorTab from "$lib/components/coding/EditorTab.svelte";
 
 /** The html class assigned to component wrappers */
 export const mdcWrapperClass = "svelte-mdc";
@@ -56,7 +58,9 @@ export interface Attribute
 }
 
 const elementMap = {
-    "MermaidDiagram": MermaidDiagram
+    "MermaidDiagram": MermaidDiagram,
+    "CodeEditor": CodeEditor,
+    "EditorTab": EditorTab
 } as const;
 
 export function getComponent(name: ElementName)
@@ -208,7 +212,7 @@ export function hydrateComponent(component: RenderedSMDComponent): ReturnType<ty
 	    props: {
             ...component.props,
             children: contentsSnippet ?? emptySnippet
-        }
+        } as any // This is needed to prevent typescript from yelling at us
     })
 
     console.log("Hydrated component: " + component.id)
