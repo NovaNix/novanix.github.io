@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Snippet } from "svelte";
+    import { onDestroy, onMount, type Snippet } from "svelte";
 
     //let testProp: string;
 
@@ -16,6 +16,14 @@
     {
         count += 1;
     }
+
+    onMount(() => {
+        console.log("Mounting Diagram!!")
+    })
+
+    onDestroy(() => {
+        console.log("Destroying Diagram!!")
+    })
 
 </script>
 

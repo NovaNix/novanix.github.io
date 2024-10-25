@@ -2,7 +2,13 @@ import {render} from "svelte/server"
 import { v4 as uuidv4 } from "uuid"
 
 import MermaidDiagram from "$lib/components/MermaidDiagram.svelte"
-import { createRawSnippet, type Snippet } from "svelte";
+import { createRawSnippet, hydrate, unmount, type Snippet } from "svelte";
+import { HTMLElements } from "./htmlutils";
+
+/** The html class assigned to component wrappers */
+export const mdcWrapperClass = "svelte-mdc";
+/** The  */
+//export const mdcContentsWrapperClass = "svelte-mdc-contents";
 
 export type SMDBlock = SMDComponent | string;
 
@@ -14,6 +20,7 @@ export interface SMDComponent
     attributes: Attribute[];
 
     contents?: string;
+    
 } 
 
 enum TagType {
@@ -25,7 +32,7 @@ enum TagType {
 interface Tag {
     raw: string;
 
-    name: ElementName;
+    name: string;
     // name: string;
     type: TagType;
 
@@ -38,6 +45,8 @@ interface Tag {
     contents?: string;
 
     depth: number;
+
+    builtIn: boolean;
 }
 
 export interface Attribute
@@ -67,6 +76,9 @@ export interface RenderedSMDComponent
     name: ElementName;
 
     props: Record<string, any>;
+
+    contents?: string;
+    childComponents: RenderedSMDComponent[];
 }
 
 export function renderSvelte(markdown: string): [string, RenderedSMDComponent[]]
@@ -104,20 +116,21 @@ export function renderMarkdown(markdown: string, isRoot: boolean): [string, Rend
 
     }
 
-    return [html, components];
+    return [`<div class="${mdcWrapperClass}">\n\n${html}\n\n</div>`, components];
 }
 
 function renderComponent(component: SMDComponent): [string, RenderedSMDComponent]
 {
+    const id = "sv-" + uuidv4();
     // let html = `<h1>${component.tag}</h1>\n`;
 
     let svelteComponent = elementMap[component.tag];
 
-    //let childComponents: 
+    let childComponents: RenderedSMDComponent[] = [];
     let contents: string | undefined; 
 
     if (component.contents)
-        [contents] = renderMarkdown(component.contents, false);
+        [contents, childComponents] = renderMarkdown(component.contents, false);
 
     let attrProps: Record<string, any> = {};
 
@@ -126,24 +139,22 @@ function renderComponent(component: SMDComponent): [string, RenderedSMDComponent
         attrProps[attribute.name] = attribute.value;
     }
 
+    let renderedComponent: RenderedSMDComponent = {
+        id,
+        name: component.tag,
+        props: {
+            ...attrProps
+        },
+
+        contents,
+        childComponents
+    }
+
     let childrenSnippet: Snippet | undefined;
 
     if (contents)
     {
-        childrenSnippet = createRawSnippet(() => {
-            return {
-                render: (): string =>
-                {
-                    return contents;
-                },
-        
-                setup: (node) =>
-                {
-                    // Hydrate the children
-                }
-            }
-            
-        })
+        childrenSnippet = componentSnippet(renderedComponent);
     }
         
     // Convert the component to HTML
@@ -155,24 +166,82 @@ function renderComponent(component: SMDComponent): [string, RenderedSMDComponent
         }
     })
 
-    const id = "sv-" + uuidv4();
-
-    let renderedComponent: RenderedSMDComponent = {
-        id,
-        name: component.tag,
-        props: {
-            
-            ...attrProps
-        },
-
-
-
-    }
-
-    let rendered = `<div class="svelte-mdc" id="${id}">${output.body}</div>`
+    let rendered = `<div class="${mdcWrapperClass}" id="${id}">${output.body}</div>`
 
     return [rendered, renderedComponent];
 }
+
+/**
+ * Hydrates a component found in markdown.
+ * Should only be called on the client.
+ * @param component 
+ * @returns 
+ */
+export function hydrateComponent(component: RenderedSMDComponent): ReturnType<typeof hydrate> | undefined
+{
+    if (document == null)
+    {
+        console.warn("Attempted to hydrate on the server!!");
+        return;
+    }
+
+    let target = document.getElementById(component.id);
+
+    if (target == null)
+    {
+        console.warn("Failed to find rendered svelte component!!")
+        return;
+    }
+
+    let contentsSnippet;
+
+    if (component.contents)
+        contentsSnippet = componentSnippet(component);
+
+    let result = hydrate(getComponent(component.name), {
+	    target,
+	    props: {
+            ...component.props,
+            children: contentsSnippet
+        }
+    })
+
+    console.log("Hydrated component: " + component.id)
+
+    return result;
+}
+
+export function componentSnippet(component: RenderedSMDComponent)
+{
+    return createRawSnippet(() => {
+        return {
+            render: (): string =>
+            {
+                return component.contents ?? "";
+            },
+    
+            setup: (node) =>
+            {
+                // Hydrate the children
+                console.log("running setup for node " + component.id);
+                console.log(node);
+
+                let hydrated = component.childComponents.map(child => hydrateComponent(child)).filter(e => e != null);
+
+                return () => {
+                    // We need to unmount everything when the element is destroyed
+
+                    for (let child of hydrated)
+                    {
+                        unmount(child);
+                    }
+                    
+                }
+            }
+        }
+        
+    })
+} 
 
 /**
  * Finds all of the top level components in the markdown, along with text blocks associated with them
@@ -183,7 +252,8 @@ function findBlocks(markdown: string): SMDBlock[]
     // Get all of the tags that are not contained within other tags
     let tags = getTags(markdown).filter(value => value.depth == 0);
 
-    tags = tags.filter(tag => tag.type != TagType.End);
+    // Remove all ending tags and built-in tags
+    tags = tags.filter(tag => tag.type != TagType.End && !tag.builtIn);
 
     let blocks: SMDBlock[] = [];
     
@@ -192,9 +262,6 @@ function findBlocks(markdown: string): SMDBlock[]
 
     for (let tag of tags)
     {
-        console.log("Processing tag")
-        console.log(tag);
-
         let startTag = tag;
         let endTag = startTag.pair ?? startTag;
 
@@ -203,13 +270,38 @@ function findBlocks(markdown: string): SMDBlock[]
         let blockStart = startTag.indices[0]; // The start index of the starting tag
         let blockEnd = endTag.indices[1]; // The end index of the ending tag
 
-        blocks.push(markdown.slice(prevIndex, blockStart));
-        prevIndex = blockEnd; 
+        // All of the text before this tag
+        const pretext = markdown.slice(prevIndex, blockStart);
+
+        //console.log(`Adding text: ${pretext}`)
+        //console.log(`start: ${blockStart}, end: ${blockEnd}`)
+
+        blocks.push(pretext);
+        prevIndex = blockEnd;
+
+        if (tag.builtIn)
+        {
+            // Right now we dont allow built-in tags, so this should never run
+            let text = tag.raw;
+
+            //console.log("Found built-in tag: " + tag.name);
+            //console.log(`Adding ${text}`);
+
+            blocks.push(text);
+
+            continue;
+        }
+
+        if (!elementNames.includes(tag.name))
+        {
+            console.warn("Unsupported tag: " + tag.name);
+            continue;
+        }
 
         // Add the component to the blocks
 
         let component: SMDComponent = {
-            tag: startTag.name,
+            tag: startTag.name as ElementName,
             attributes: parseAttributes(startTag.attrs),
             contents: startTag.contents
         }
@@ -220,12 +312,6 @@ function findBlocks(markdown: string): SMDBlock[]
 
     // Add the text after the components
     blocks.push(markdown.slice(prevIndex));
-
-    for (let block of blocks)
-    {
-        console.log("Found block!");
-        console.log(block);
-    }
 
     return blocks.filter(block => {
         // Remove all zero length strings
@@ -249,9 +335,6 @@ function getTags(markdown: string): Tag[]
 
     for (let match of markdown.matchAll(tagRegex))
     {
-        //console.log("Found match!");
-        //console.log(match);
-
         if (match.groups == null)
             continue;
 
@@ -259,8 +342,16 @@ function getTags(markdown: string): Tag[]
         let name = match.groups["tag"] ?? "";
         let attrs = match.groups["attrs"] ?? "";
 
-        if (!elementNames.includes(name))
-            continue; // This element is not supported!
+        //if (!elementNames.includes(name))
+        //    continue; // This element is not supported!
+
+        const builtIn = HTMLElements.includes(name);
+
+        if (builtIn)
+        {
+            console.log("skipping built-in html tag " + raw);
+            continue;
+        }
 
         let indices = match?.indices?.[0];
 
@@ -278,11 +369,12 @@ function getTags(markdown: string): Tag[]
 
         let tag: Tag = {
             raw, 
-            name: name as ElementName,
+            name,
             type,
             attrs,
             indices: indices ?? [-1, -1],
-            depth
+            depth,
+            builtIn
         }
 
         if (type == TagType.Start)
@@ -316,18 +408,6 @@ function getTags(markdown: string): Tag[]
 
         tags.push(tag);
     }
-
-    for (let tag of tags)
-    {
-       //console.log("Found tag");
-        //console.log(tag);
-    }
-
-    // markdown.matchAll(tagRegex)?.forEach((value) => {
-    //     console.log("Found match!")
-    //     console.log(value);
-    //     //value.
-    // });
 
     return tags;
 }

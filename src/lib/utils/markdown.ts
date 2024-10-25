@@ -13,6 +13,13 @@ const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
 
 type fetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
+export interface RenderedMarkdown
+{
+    html: string, 
+    frontmatter: object, 
+    components: RenderedSMDComponent[]
+}
+
 /**
  * Takes a URL and reads the markdown from that file. 
  * This exists because Vite will occasionally decide to turn urls into data urls, which break the fetch provided by Sveltekit
@@ -39,7 +46,7 @@ export async function readMarkdown(url: string, ufetch: fetch): Promise<string>
  * @param markdown 
  * @returns The HTML string, along with the frontmatter of the markdown, and a list of all of the svelte components in the markdown
  */
-export async function parseMarkdown(markdown: string): Promise<[string, object, RenderedSMDComponent[]]>
+export async function parseMarkdown(markdown: string): Promise<RenderedMarkdown>
 {
     const marked = new Marked();
 
@@ -86,7 +93,11 @@ export async function parseMarkdown(markdown: string): Promise<[string, object, 
     console.log("POST ENTITY FIX\n------------------------------------------")
     console.log(html);
 
-    return [html, frontmatter, svelteComponents];
+    return {
+        html, 
+        frontmatter, 
+        components: svelteComponents
+    };
 }
 
 type ReplacerFunction = (substring: string, ...args: any[]) => string;

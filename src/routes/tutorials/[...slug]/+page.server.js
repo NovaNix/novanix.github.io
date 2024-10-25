@@ -38,17 +38,18 @@ export async function load({ fetch, params })
 
     let toc;
 
+    /** @type {import('$lib/utils/markdown').RenderedMarkdown | undefined} */
+    let renderedMarkdown;
+
     if (page.file)
     {
         let markdown = await read(page.file).text();
         //let markdown = await readMarkdown(page.file, fetch);
         //let markdown = await readMarkdown(page.file, );
 
+        renderedMarkdown = await parseMarkdown(markdown);
 
-
-        [content, frontmatter, renderedComponents] = await parseMarkdown(markdown);
-
-        toc = generateTOC(content);
+        toc = generateTOC(renderedMarkdown.html);
     }
 
     return {
@@ -56,8 +57,7 @@ export async function load({ fetch, params })
         tutorial,
         page,
 
-        content,
-        frontmatter,
+        renderedMarkdown,
 
         sideTreeTitle: tutorial.title,
         sideTree,
@@ -70,8 +70,6 @@ export async function load({ fetch, params })
         toc,
 
         path: params.slug,
-
-        renderedComponents 
     };
 }
 
