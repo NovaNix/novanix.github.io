@@ -33,7 +33,13 @@ export async function load({ fetch, params })
     let content; 
     let frontmatter;
 
+    /** @type {import('$lib/utils/markdownsvelte').RenderedSMDComponent[]} */
+    let renderedComponents = [];
+
     let toc;
+
+    /** @type {import('$lib/utils/markdown').RenderedMarkdown | undefined} */
+    let renderedMarkdown;
 
     if (page.file)
     {
@@ -41,9 +47,9 @@ export async function load({ fetch, params })
         //let markdown = await readMarkdown(page.file, fetch);
         //let markdown = await readMarkdown(page.file, );
 
-        [content, frontmatter] = await parseMarkdown(markdown);
+        renderedMarkdown = await parseMarkdown(markdown);
 
-        toc = generateTOC(content);
+        toc = generateTOC(renderedMarkdown.html);
     }
 
     return {
@@ -51,8 +57,7 @@ export async function load({ fetch, params })
         tutorial,
         page,
 
-        content,
-        frontmatter,
+        renderedMarkdown,
 
         sideTreeTitle: tutorial.title,
         sideTree,
@@ -64,7 +69,7 @@ export async function load({ fetch, params })
 
         toc,
 
-        path: params.slug
+        path: params.slug,
     };
 }
 

@@ -1,8 +1,11 @@
 <script>
+    import { page } from "$app/stores";
     import "$lib/assets/markdown.scss"
     import Article from '$lib/components/Article.svelte';
+    import RenderedMarkdown from "$lib/components/RenderedMarkdown.svelte";
 
     export let data;
+
 </script>
 
 <svelte:head>
@@ -11,8 +14,10 @@
 </svelte:head>
 
 <Article title={data.page.title} sideTreeTitle={data.sideTreeTitle} sideTree={data.sideTree} toc={data.toc} prev={data.prev} next={data.next} crumbs={data.crumbs}>
-    {#if data.content}
-        <div class="markdown">{@html data.content}</div>
+    {#if data.renderedMarkdown}
+        {#key $page.url.pathname}
+            <RenderedMarkdown {...data.renderedMarkdown}/>
+        {/key}
     {:else}
         <h2>Pages</h2>
         <ul>

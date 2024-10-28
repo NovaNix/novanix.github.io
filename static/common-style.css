@@ -34,3 +34,9 @@ html, body {
 code {
     font-family: Consolas, 'Courier New', monospace;
 }
+
+
+/* This class is used for svelte components injected into markdown files. We need to not display it */
+.svelte-mdc {
+    display: contents;
+}

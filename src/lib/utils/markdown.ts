@@ -7,10 +7,18 @@ import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import markedmermaid from './markedmermaid';
 import markedpreviews from './markedpreviews';
+import { renderSvelte, type RenderedSMDComponent, type SMDComponent } from '$lib/utils/markdownsvelte';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
 
 type fetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+
+export interface RenderedMarkdown
+{
+    html: string, 
+    frontmatter: object, 
+    components: RenderedSMDComponent[]
+}
 
 /**
  * Takes a URL and reads the markdown from that file. 
@@ -36,9 +44,9 @@ export async function readMarkdown(url: string, ufetch: fetch): Promise<string>
 /**
  * Takes a markdown string and converts it to HTML, while extracting the frontmatter
  * @param markdown 
- * @returns The HTML string, along with the frontmatter of the markdown 
+ * @returns The HTML string, along with the frontmatter of the markdown, and a list of all of the svelte components in the markdown
  */
-export async function parseMarkdown(markdown: string): Promise<[string, object]>
+export async function parseMarkdown(markdown: string): Promise<RenderedMarkdown>
 {
     const marked = new Marked();
 
@@ -48,7 +56,11 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     markdown = removeFrontmatter(markdown);
 
     // convert the markdown into html
-    
+
+    let svelteComponents: RenderedSMDComponent[];
+
+    [markdown, svelteComponents] = renderSvelte(markdown);
+
     // configure marked
     marked.use(gfmHeadingId()); // Add unique IDs to headers
     marked.use(markedAlert()); // Add GitHub markdown alerts
@@ -65,10 +77,48 @@ export async function parseMarkdown(markdown: string): Promise<[string, object]>
     marked.use(markedmermaid);
     marked.use(markedpreviews);
 
+    //console.log("PRE PARSE\n------------------------------------------")
+    //console.log(markdown);
+
     let html = await marked.parse(markdown);
 
-    return [html, frontmatter];
+    // console.log("POST PARSE\n------------------------------------------")
+    // console.log(html);
+
+    // FIX ESCAPE CHARACTERS IN RAW HTML BLOCK
+    const rawHTMLRegex = /<slot class="RAW-HTML">(?<rawhtml>.*?)<\/slot>/gs;
+    
+    html = html.replaceAll(rawHTMLRegex, htmlEntityReplacer);
+
+    //console.log("POST ENTITY FIX\n------------------------------------------")
+    //console.log(html);
+
+    return {
+        html, 
+        frontmatter, 
+        components: svelteComponents
+    };
 }
+
+type ReplacerFunction = (substring: string, ...args: any[]) => string;
+
+const htmlEntityReplacer: ReplacerFunction = (substring: string, ...args: any[]) => 
+{
+    // This is the first capture group
+    let rawHTML = args[0] as string;
+
+    // console.log("RAW HTML: ");
+    // console.log(rawHTML);
+
+    let fixed = rawHTML
+        .replaceAll(/&lt;/g, "<")
+        .replaceAll(/&gt;/g, ">")
+        .replaceAll(/&quot;/g, "\"")
+        ;
+    
+    return fixed;
+}
+ 
 
 /**
  * Converts the frontmatter of markdown into a JavaScript object

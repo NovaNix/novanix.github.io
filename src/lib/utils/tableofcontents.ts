@@ -71,7 +71,10 @@ function getRoots(headers: Parse5Node[]): ITreeNode[]
 
     while (remainingHeaders.length > 0)
     {
-        roots.push(getNextNode(remainingHeaders));
+        let node = getNextNode(remainingHeaders)
+
+        if (node)
+            roots.push(node);
     }
 
     return roots;
@@ -82,7 +85,7 @@ function getRoots(headers: Parse5Node[]): ITreeNode[]
  * Note: child nodes are considered to be all nodes with a depth greater than the parent node, up until the next parent node.
  * @param headers The list of remaining headers to be processed. Will be mutated.
  */
-function getNextNode(headers: Parse5Node[]): ITreeNode
+function getNextNode(headers: Parse5Node[]): ITreeNode | null
 {
     const parent = headers.pop();
 
@@ -100,7 +103,10 @@ function getNextNode(headers: Parse5Node[]): ITreeNode
         if (getHeaderDepth(next) <= depth)
             break; // We found a node that is not a child! 
 
-        children.push(getNextNode(headers));
+        let child = getNextNode(headers)
+
+        if (child)
+            children.push(child);
     }
 
     const text = getText(parent);
@@ -110,7 +116,7 @@ function getNextNode(headers: Parse5Node[]): ITreeNode
     {
         // Something went wrong!!
         console.warn(`Failed to get ID for header "${text}"`);
-        id = "";
+        return null;
     }
 
     return {
