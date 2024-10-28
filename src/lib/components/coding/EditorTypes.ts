@@ -1,15 +1,24 @@
 interface EditorState
 {
-	openTab: string
+	openTab: Language,
+
+	tabs: EditorTab[]
 }
 
-interface EditorTabState
+interface EditorTab
 {
 	hidden: boolean;
+
+	code: string;
 }
 
 enum Language
 {
 	"html",
 	"css"
+}
+
+enum EditorPreviewMode
+{
+	HTML
 }
