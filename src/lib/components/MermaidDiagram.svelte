@@ -26,7 +26,7 @@
 <div bind:this={content} class="raw-mermaid-diagram">
     {@render children?.()}
 </div>
-<div>
+<div id="diagram">
     <!-- diagram: {diagram} -->
     {#await mermaid.render('graphDiv', diagram)}
 	<!-- promise is pending -->
@@ -41,11 +41,14 @@
 </div>
 
 <style>
-    div {
-        white-space: pre-wrap;
+    #diagram {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
     }
 
     .raw-mermaid-diagram {
+        white-space: pre-wrap;
         display: none;
     }
 </style>

@@ -1,5 +1,10 @@
+<script module>
+	import hljs from 'highlight.js';
+</script>
+
 <script lang="ts">
-    import { getContext, type Snippet } from "svelte";
+   
+	import { getContext, type Snippet } from "svelte";
     import SnippetExtractor from "../utils/SnippetExtractor.svelte";
 
 	interface Props {
@@ -13,11 +18,7 @@
 	let {children, editable = false, lang, hidden = false}: Props = $props();
 
 	let code = $state("")
-
-	let tab = $derived({
-		lang,
-		code
-	})
+	let highlighted = $state("")
 
 	let editor = getContext('code-editor') as EditorState
 	
@@ -32,6 +33,10 @@
 				}
 
 		editor.tabs[lang].code = code;
+
+		// Highlight the code
+
+		highlighted = hljs.highlight(code, {language: lang}).value
 	})
 
 </script>
@@ -39,5 +44,5 @@
 <SnippetExtractor bind:value={code} snippet={children}/>
 
 {#if !hidden}
-<pre><code contenteditable={editable}>{code}</code></pre>
+<pre><code contenteditable={editable} class="hljs">{@html highlighted}</code></pre>
 {/if}
