@@ -1,24 +1,22 @@
 interface EditorState
 {
-	openTab: Language,
-
-	tabs: EditorTab[]
+	// openTab: Language,
+	tabs: Partial<Record<Language, EditorTab>>
 }
 
 interface EditorTab
 {
-	hidden: boolean;
-
-	code: string;
+	lang: Language,
+	code: string
 }
 
 enum Language
 {
-	"html",
-	"css"
+	html = "html",
+	css = "css"
 }
 
 enum EditorPreviewMode
 {
-	HTML
+	HTML = "html"
 }

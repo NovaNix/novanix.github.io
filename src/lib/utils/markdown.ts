@@ -77,21 +77,21 @@ export async function parseMarkdown(markdown: string): Promise<RenderedMarkdown>
     marked.use(markedmermaid);
     marked.use(markedpreviews);
 
-    console.log("PRE PARSE\n------------------------------------------")
-    console.log(markdown);
+    //console.log("PRE PARSE\n------------------------------------------")
+    //console.log(markdown);
 
     let html = await marked.parse(markdown);
 
-    console.log("POST PARSE\n------------------------------------------")
-    console.log(html);
+    // console.log("POST PARSE\n------------------------------------------")
+    // console.log(html);
 
     // FIX ESCAPE CHARACTERS IN RAW HTML BLOCK
     const rawHTMLRegex = /<slot class="RAW-HTML">(?<rawhtml>.*?)<\/slot>/gs;
     
     html = html.replaceAll(rawHTMLRegex, htmlEntityReplacer);
 
-    console.log("POST ENTITY FIX\n------------------------------------------")
-    console.log(html);
+    //console.log("POST ENTITY FIX\n------------------------------------------")
+    //console.log(html);
 
     return {
         html, 

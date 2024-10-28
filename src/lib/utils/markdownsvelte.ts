@@ -120,14 +120,15 @@ export function renderMarkdown(markdown: string, isRoot: boolean): [string, Rend
 
     }
 
-    if (blocks.length > 1)
-        html = `<div class="${mdcWrapperClass}">\n\n${html}\n\n</div>\n`
+    //if (blocks.length > 1)
+    html = `<div class="${mdcWrapperClass}">\n\n${html}\n\n</div>\n`
 
     return [html, components];
 }
 
 function renderComponent(component: SMDComponent): [string, RenderedSMDComponent]
 {
+    console.log("Rendering Component: " + component.tag);
     const id = "sv-" + uuidv4();
     // let html = `<h1>${component.tag}</h1>\n`;
 

@@ -20,6 +20,8 @@
 		// this should be looked into more closely later, but for now, imma just remove it
 		raw = raw.replace(/<!---->$/, "");
 
+		raw = raw.replace(/^<div class="svelte-mdc">\n\n\n(.*)\n\n<\/div>$/gs, "$1");
+
 		value = raw;
 	});
 
