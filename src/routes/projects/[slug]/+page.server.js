@@ -14,14 +14,14 @@ export async function load({ fetch, params })
     let markdown = await read(project.file).text();
     //let markdown = await readMarkdown(project.file, fetch);
 
-    let [content, frontmatter] = await parseMarkdown(markdown);
+    let renderedMarkdown = await parseMarkdown(markdown);
 
-    let toc = generateTOC(content);
+    let toc = generateTOC(renderedMarkdown.html);
 
     return { 
         
         title: project.name, 
-        content: content, 
+        renderedMarkdown,
 
         toc: toc,
         //page: page,

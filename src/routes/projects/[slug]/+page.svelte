@@ -1,7 +1,9 @@
 <script>
+    import { page } from "$app/stores";
     import Article from "$lib/components/Article.svelte";
     import GitHubButton from "$lib/components/buttons/GitHubButton.svelte";
     import WebsiteButton from "$lib/components/buttons/WebsiteButton.svelte";
+    import RenderedMarkdown from "$lib/components/RenderedMarkdown.svelte";
 
 	export let data;
 </script>
@@ -17,7 +19,9 @@
         {#if data.project.url}<WebsiteButton url={data.project.url ?? ""} label/>{/if}
     </svelte:fragment>
 	
-    <div class="markdown">{@html data.content}</div>
+    {#key $page.url.pathname}
+        <RenderedMarkdown {...data.renderedMarkdown}/>
+    {/key}
 </Article>
 
 <style lang="scss">
