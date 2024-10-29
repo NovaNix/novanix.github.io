@@ -293,9 +293,6 @@ function findBlocks(markdown: string): SMDBlock[]
         // All of the text before this tag
         const pretext = markdown.slice(prevIndex, blockStart);
 
-        //console.log(`Adding text: ${pretext}`)
-        //console.log(`start: ${blockStart}, end: ${blockEnd}`)
-
         blocks.push(pretext);
         prevIndex = blockEnd;
 
@@ -303,9 +300,6 @@ function findBlocks(markdown: string): SMDBlock[]
         {
             // Right now we dont allow built-in tags, so this should never run
             let text = tag.raw;
-
-            //console.log("Found built-in tag: " + tag.name);
-            //console.log(`Adding ${text}`);
 
             blocks.push(text);
 
@@ -362,14 +356,17 @@ function getTags(markdown: string): Tag[]
         let name = match.groups["tag"] ?? "";
         let attrs = match.groups["attrs"] ?? "";
 
-        //if (!elementNames.includes(name))
-        //    continue; // This element is not supported!
-
         const builtIn = HTMLElements.includes(name);
 
         if (builtIn)
         {
-            console.log("skipping built-in html tag " + raw);
+            //console.log("skipping built-in html tag " + raw);
+            continue;
+        }
+
+        if (!elementNames.includes(name))
+        {
+            // This prevents all text that look like tags, but that arent tags
             continue;
         }
 
