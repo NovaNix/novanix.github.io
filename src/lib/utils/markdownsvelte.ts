@@ -1,7 +1,7 @@
 import {render} from "svelte/server"
 import { v4 as uuidv4 } from "uuid"
 import { createRawSnippet, hydrate, unmount, type Snippet } from "svelte";
-import { HTMLElements } from "./htmlutils";
+import { escapeHTML, HTMLElements } from "./htmlutils";
 
 import MermaidDiagram from "$lib/components/MermaidDiagram.svelte"
 import CodeEditor from "$lib/components/coding/CodeEditor.svelte";
@@ -22,7 +22,6 @@ export interface SMDComponent
     attributes: Attribute[];
 
     contents?: string;
-    
 } 
 
 enum TagType {
@@ -83,14 +82,18 @@ export interface RenderedSMDComponent
 
     contents?: string;
     childComponents: RenderedSMDComponent[];
+
+    unwrappedContents?: string;
 }
 
 export function renderSvelte(markdown: string): [string, RenderedSMDComponent[]]
 {
-    return renderMarkdown(markdown, true);
+    const [rendered, components, unwrapped] = renderMarkdown(markdown, true);
+
+    return [rendered, components];
 }
 
-export function renderMarkdown(markdown: string, isRoot: boolean): [string, RenderedSMDComponent[]]
+export function renderMarkdown(markdown: string, isRoot: boolean): [string, RenderedSMDComponent[], string]
 {
     let html = "";
 
@@ -121,12 +124,13 @@ export function renderMarkdown(markdown: string, isRoot: boolean): [string, Rend
     }
 
     //if (blocks.length > 1)
+    let unwrapped = html;
     html = `<div class="${mdcWrapperClass}">\n\n${html}\n\n</div>\n`
 
-    return [html, components];
+    return [html, components, unwrapped];
 }
 
-function renderComponent(component: SMDComponent): [string, RenderedSMDComponent]
+function renderComponent(component: SMDComponent): [string, RenderedSMDComponent, string]
 {
     console.log("Rendering Component: " + component.tag);
     const id = "sv-" + uuidv4();
@@ -136,9 +140,10 @@ function renderComponent(component: SMDComponent): [string, RenderedSMDComponent
 
     let childComponents: RenderedSMDComponent[] = [];
     let contents: string | undefined; 
+    let unwrappedContents: string | undefined;
 
     if (component.contents)
-        [contents, childComponents] = renderMarkdown(component.contents, false);
+        [contents, childComponents, unwrappedContents] = renderMarkdown(component.contents, false);
 
     let attrProps: Record<string, any> = {};
 
@@ -155,6 +160,7 @@ function renderComponent(component: SMDComponent): [string, RenderedSMDComponent
         },
 
         contents,
+        unwrappedContents,
         childComponents
     }
 
@@ -177,8 +183,9 @@ function renderComponent(component: SMDComponent): [string, RenderedSMDComponent
     })
 
     let rendered = `<div class="${mdcWrapperClass}" id="${id}">\n${output.body}\n</div>\n`
+    let unwrapped = output.body;
 
-    return [rendered, renderedComponent];
+    return [rendered, renderedComponent, unwrapped];
 }
 
 /**
@@ -226,14 +233,14 @@ const emptySnippet = createRawSnippet(() => {
         render: (): string =>
         {
             return "";
-        },
+        }
     }
 })
 
 
 export function componentSnippet(component: RenderedSMDComponent)
 {
-    return createRawSnippet(() => {
+    const snippet = createRawSnippet(() => {
         return {
             render: (): string =>
             {
@@ -261,6 +268,19 @@ export function componentSnippet(component: RenderedSMDComponent)
         }
         
     })
+
+    const asRaw = (): string => {
+        // return component.contents ?? "";
+        return component.unwrappedContents ?? component.contents ?? "";
+        //return escapeHTML(component.contents ?? "");
+    }
+
+    Object.defineProperty(snippet, 'asRaw', {
+        value: asRaw,
+        writable: false,
+    });
+
+    return snippet;
 } 
 
 /**

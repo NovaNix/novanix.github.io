@@ -128,3 +128,27 @@ export const HTMLElements = [
     "video",
     "wbr"
 ] // Total of 116 (excluding non-html5 and also comments, which are "<!-- [comment] -->").
+
+const escapeMap = {
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;"
+} as const;
+
+export function escapeHTML(html: string)
+{
+    let fixed = html;
+
+    for (let [char, entity] of Object.entries(escapeMap))
+    {
+        fixed = fixed.replaceAll(char, entity);
+    }
+
+    // let fixed = rawHTML
+    // .replaceAll(/&lt;/g, "<")
+    // .replaceAll(/&gt;/g, ">")
+    // .replaceAll(/&quot;/g, "\"")
+    // ;
+
+    return fixed;
+}

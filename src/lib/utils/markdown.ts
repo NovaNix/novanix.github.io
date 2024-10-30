@@ -6,7 +6,6 @@ import markedAlert from 'marked-alert';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import markedmermaid from './markedmermaid';
-import markedpreviews from './markedpreviews';
 import { renderSvelte, type RenderedSMDComponent, type SMDComponent } from '$lib/utils/markdownsvelte';
 
 const frontmatterRegex = /^---((?:\r|\n|.)*?)---/
@@ -75,23 +74,13 @@ export async function parseMarkdown(markdown: string): Promise<RenderedMarkdown>
     }))
 
     marked.use(markedmermaid);
-    marked.use(markedpreviews);
-
-    //console.log("PRE PARSE\n------------------------------------------")
-    //console.log(markdown);
 
     let html = await marked.parse(markdown);
-
-    // console.log("POST PARSE\n------------------------------------------")
-    // console.log(html);
 
     // FIX ESCAPE CHARACTERS IN RAW HTML BLOCK
     const rawHTMLRegex = /<slot class="RAW-HTML">(?<rawhtml>.*?)<\/slot>/gs;
     
     html = html.replaceAll(rawHTMLRegex, htmlEntityReplacer);
-
-    //console.log("POST ENTITY FIX\n------------------------------------------")
-    //console.log(html);
 
     return {
         html, 

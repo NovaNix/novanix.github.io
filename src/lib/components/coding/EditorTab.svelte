@@ -41,7 +41,7 @@
 
 </script>
 
-<SnippetExtractor bind:value={code} snippet={children}/>
+<SnippetExtractor bind:value={code} snippet={children} tryEscaped/>
 
 {#if !hidden}
 <pre><code contenteditable={editable} class="hljs">{@html highlighted}</code></pre>
