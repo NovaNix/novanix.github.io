@@ -105,6 +105,9 @@ $alert-transparency: 50%;
     table {
         border-collapse: collapse;
         width: 100%;
+
+        margin-block-start: 1em;
+        margin-block-end: 1em;
     }
 
     th, td {

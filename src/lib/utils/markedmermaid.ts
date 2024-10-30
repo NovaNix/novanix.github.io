@@ -15,7 +15,7 @@ renderer.code = function ({ text, lang }) {
     }
     else 
     {
-        return '<pre><code>' + text + '</code></pre>';
+        return '<pre><code class="hljs">' + text + '</code></pre>';
     }
 };
 
