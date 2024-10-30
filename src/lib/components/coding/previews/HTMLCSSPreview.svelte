@@ -9,19 +9,21 @@ import { getContext } from "svelte";
         let htmlTab = editor.tabs["html"];
         let cssTab = editor.tabs["css"];
 
-        let html = "";
+        const head = `<base target="_blank">`
+
+        let contents = "";
 
         if (htmlTab)
         {
-            html += htmlTab.code;
+            contents += htmlTab.code;
         }
 
         if (cssTab)
         {
-            html += `<style>${cssTab.code}</style>`
+            contents += `<style>${cssTab.code}</style>`
         }
 
-        return html;
+        return `<!DOCTYPE html><html><head>${head}</head><body>${contents}</body></html>`;
     })
 
 </script>
