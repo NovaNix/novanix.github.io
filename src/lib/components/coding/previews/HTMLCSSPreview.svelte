@@ -1,7 +1,6 @@
 <script lang="ts">
     import SmartIFrame from "$lib/components/utils/SmartIFrame.svelte";
-import { getContext } from "svelte";
-
+    import { getContext } from "svelte";
 
     let editor = getContext('code-editor') as EditorState;
 
