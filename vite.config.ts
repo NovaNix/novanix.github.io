@@ -5,5 +5,14 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	assetsInclude: [
 		"md"
-	] 
+	],
+
+	css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern',
+                // additionalData: '@use "$lib/assets/scss/variables.scss" as *;'
+            }
+        }
+    },
 });
