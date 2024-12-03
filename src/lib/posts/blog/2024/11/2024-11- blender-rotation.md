@@ -43,9 +43,13 @@ Ex: XYZ rotation mode: X -> Y -> Z, ZYX rotation mode: Z -> Y -> X
 
 ### Euler Rotation Flaws
 
-<!-- gimbal lock (explain how there are multiple euler angles for each rotation and how that causes problems) -->
- 
-INSERT SECTION ON GIMBAL LOCK
+When thinking about representing things in space, it is useful to think about **degrees of freedom**. Rotation requires three degrees of freedom.
+In the case of euler angles, those three degrees are easy to map to the component values of the rotation; there are 3 components, one for each degree.
+
+However, there are certain orientations where a problem known as **gimbal-lock** occurs. Gimbal-lock is when two of the axes being rotated around overlap, effectively removing a degree of freedom.
+This is problematic for several reasons, but one of the primary issues is with animation. Gimbal-lock can create weird jumps and other problems when trying to animate between two orientations.
+
+<!-- INSERT GIMBAL LOCK ANIMATION -->
 
 In addition to gimbal-lock, it is just very difficult to smoothly transition between two rotations defined in euler angles.
 Instead of smoothly tracking from one rotation to another, it can take wild swoops to its destination. 
@@ -76,9 +80,62 @@ They have some properties that make them nice to use mathematically, meaning com
 While quaternions are ideal for computers, they aren't ideal for people. They're difficult to conceptualize for animators, and they're difficult to understand mathematically for developers.
 While trying to research how the math behind them works, the common bit of advice I heard is to not even try, instead relying on the work other people have done to make them usable. 
 
-# fundamental blender issues
+Because of this, modifying the animation curves of quaternions can be quite difficult. 
 
-doesn't take advantage of quaternion interpolation
+# Blender's Fundamental Animation Problems
+
+Rotation modes aside, Blender has a few fundamental problems with how rotation animations are performed and edited.
+
+## Component-Wise Interpolation 
+
+The primary issue with how Blender animates rotation has to deal with the fact that Blender doesn't perform quaternion interpolation.
+
+In Blender, things are interpolated per-component. For something like position or scale, where each component is isolated from each other, this works quite well.
+It's intuitive, it's fast, and it makes animation curves fairly straightforward.
+
+When it comes to rotation, this is only the case for a few rotation modes. Euler Angles for example, is *somewhat* isolated. This makes working with their curves slightly more intuitive than other rotation modes.
+However for axis-angle and quaternion rotation, each component is *tied* to each other in some way.
+With axis-angle rotation for instance, the axis the object is rotated around is a unit vector. 
+And with quaternion rotation, the entire thing is a unit quaternion. 
+
+When editing one value, the others should update to keep the values in an acceptable state. And Blender *does* do this when using the transformation tools.
+However while animating, Blender may put the values into an invalid state. In these situations, Blender will put the values into a valid state.
+
+While this *works*, this method does not produce the same results as quaternion interpolation. 
+
+When we animate between two orientations, we expect that the object will move the least amount it needs to in order to reach the desired rotation.
+But no matter what rotation mode you choose, none of them achieve this result without manually modifying the curves.
+
+## Animation Curves
+
+Animation curves are a powerful tool. They allow for artists to quickly tweak how two states are interpolated, which is extremely important for animation.
+However they have a fundamental flaw. 
+
+For animating positions, they're quite intuitive and are fairly powerful. However there's still a slight problem that is easy to overlook.
+
+The problem is that we're taking a three-dimensional value and converting it into a set of two-dimensional values. It can be difficult sometimes to tell how changes made on the animation graph will look when applied to the 3D scene, as the 3D context is being stripped from the value.
+
+This provides some benefits however. Each component being its own independent curve makes it easy to modify each component's interpolation in isolation.
+It also has the benefit of giving us another dimension to control: time. The x-axis of the animation graph is time, while the y-axis is in the unit of the value. 
+Having control over the timing is very important for animators.
+
+It also makes it easy to implement and render on the development side of things, as placing everything in the two-dimensional space where dependencies and relations are ignored is quite easy.
+Currently in Blender, if you wanted to see the path the object will take shown in 3D, you have to use motion paths, which do not automatically update when the graph is changed.
+
+For animating values like positions, because each component is isolated for position values, the animation graph works relatively well. 
+It can be a little clunky when dealing with large or small values, but it's still easy to use.
+
+When it comes to rotation however, the animation graph becomes *much* less intuitive.
+
+Because values in each rotation mode tend to be tied to each other in some way, you constantly have to switch between different curves to get the desired effect.
+Additionally, in axis-angle and quaternion rotation modes, it is not intuitive which curve will affect what part of the rotation.
+
+With position curves, even isolated from the 3D context, it is reasonably easy to look at an animation graph and determine what the resulting animation will look like at each frame.
+However with rotation curves, it is borderline impossible. 
+
+<!-- # fundamental blender issues -->
+
+<!-- doesn't take advantage of quaternion interpolation
 
     individual values are interpolated. curves for these values can be modified individually without messing with each other, which can be a problem...
 
@@ -88,7 +145,7 @@ in the case of axis angle and quaternion, taking this fundamentally 3d thing (a 
 
     it's difficult to map the curves into 3d however because each handle also includes a dimension of time
 
-    in addition to this, when parenting and other dynamic behaviors are included, it becomes difficult to visually display motion maps and curves in 3d space
+    in addition to this, when parenting and other dynamic behaviors are included, it becomes difficult to visually display motion maps and curves in 3d space -->
 
 # solutions/flawed solutions
 
