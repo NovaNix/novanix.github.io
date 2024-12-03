@@ -147,42 +147,106 @@ in the case of axis angle and quaternion, taking this fundamentally 3d thing (a 
 
     in addition to this, when parenting and other dynamic behaviors are included, it becomes difficult to visually display motion maps and curves in 3d space -->
 
-# solutions/flawed solutions
+# Potential Solutions
 
-required: paired animation of values. 3 values dependent on each other need to be animatable together
+I believe there are a few changes Blender could make to make rotation modes (and animation in general) more intuitive and easier to use.
 
-rotation ball (could be called spherical graph view): view rotations through space in an isolated 3d ball, with curves placed on the surface of that ball
+These ideas are partially incomplete however, as they all have their own flaws and challenges. If fixing these issues were easy, then they'd be solved already. 
 
-    cons: mapping time vector is difficult and unintuitive, encoding facing direction is difficult, required fundamental difference in how rotation is animated (as it doesn't align with the graph view anymore)
+## Axis-Visualization
 
-more rapid placement of inbetweens?: instead of handling rotation through curves, orientations can be pinned like inbetweens to guide rotation more efficiently
+One of the simplest ideas that could be implemented is to make the rotation modes more transparent. For euler angles, this can be done by *visualizing* the axes of rotation.
 
-new rotation mode: something that is intuitive to animators and that lacks the technical issues of other methods (MAY BE IMPOSSIBLE)
+By visualizing each axis, it becomes more clear to animators which value is associated with which axis.
 
-requirements for a new rotation mode:
-1. needs to work with blender's component-based interpolation
-2. needs to be intuitive
-3. needs to be easier to edit on the graph 
+## Tied-Value Interpolation
 
-## Up Forward Rotation
+Potentially the most important feature that could be implemented is the ability to have interpolation modes that modify multiple values.
 
-defined through an up vector and a forward vector
+This would be VERY difficult to implement. The way Blender is currently programmed does not allow for this, instead relying heavily on individual component interpolation.
+It would take a lot of developer effort, and would need to heavily thought through by the Blender Foundation to ensure that it fits cohesively into the rest of the program.
 
-interpolation between two sets while keeping the two vectors orthogonal is difficult
-but since blender doesn't care if the two are orthogonal or not, we dont need to try to keep them orthogonal
-we just need to keep adjusting the vectors on each interpolation step to be orthogonal
+However the benefits are quite notable
+- True quaternion interpolation would be possible
+- All intermediate forms between two valid states would also be valid
+- Animation curves can update in respect to each other
 
-### why not store forward as rotation value (up angle rotation)
-- hairy ball theorem (which direction *counts* as forward?)
-- trig (curves that keep the forward direction in a single direction would be difficult using bezier curves)
+## 3D Animation Curves
 
+In my opinion, the easiest way to make animation curves more intuitive is just to re-add the 3D context of the scene.
 
-pros: 
-- correct interpolation in almost all cases (though distribution might not be properly normalized)
-- works *relatively* well in blender's component based system
-- interpolation process avoids trig (trig is slow, and could cause unintentional wiggling)
-- allows for the forward direction to be "pinned" to prevent unintentional wiggling (also helped by the interpolation process not using trig)
+Motion paths attempt to do this, however they do not automatically update, and you still have to use the 2D graph to modify the path of the object.
+Ideally, you'd be able to modify the curves *in* 3D space. 
 
-cons:
-- if the two sets are coplanar, you run into issues... (180 degree rotation has issues, etc) (this could maybe be fixed using handles though?)
-- handles still arent *super* intuitive? (could be aided using rotation ball idea?)
+This is not easy however... One of the primary issues is that for a single isolated object, this would be quite easy. However when dependencies, parenting, drivers, constraints, etc are used at all, this becomes a monumental task to implement, and slow to execute.
+
+Additionally, when moving from the 2D graph to a 3D graph we actually *lose* three dimensions of time for each handle. 
+Representing these in 3D space is difficult and unintuitive. 
+
+### 3D Animation Graph
+
+While the time issue is not easily solved, there is a compromise that can be made for the dependency issue.
+
+Instead of displaying the curve in the viewport, the graph could be shown in a subspace of the viewport, or in a separate panel. This display would not include relations, showing instead the graph from the object's local space. 
+This would negate the need to factor in complex relationships, instead being a pure 3D graph editor. 
+
+### Rotation Ball 
+
+While this change works well for animating positions, it doesn't provide an easy solution to visualizing rotation curves. For rotations, I believe it makes more sense to represent the curves in a *spherical space*.
+
+Rotations could be displayed as a point on a ball (where the object's up vector intersects with the sphere), with another arrow showing the facing direction. Then, the path the object takes while rotating can be displayed as an arc on the surface of the sphere.
+If quaternion interpolation is properly implemented, then it would be quite easy to represent the path the object takes as a spherical bezier curve.
+
+This idea however is not without its flaws. It relies on the idea that the animation curve can be represented and modified in 3D space, which is not always possible depending on the rotation mode.
+It also makes it difficult to animate the rotation around the up axis. Finally, the time issues from the previous example still persist.
+
+However I believe that this would make animation more intuitive for animators.
+
+## New Rotation Mode
+
+Ideally, there would be a new rotation mode that could be implemented that keeps the benefits of quaternions, works with Blender's component-wise interpolation, and is more intuitive for animators to use.
+However this is not an easy task. There are many challenges that come with making a rotation mode, and each method has its own benefits and problems.
+
+A new rotation mode would have to meet the following requirements
+1. needs to work with Blender's component-based interpolation
+2. needs to be intuitive to use and modify with the graph editor
+3. needs to be mathematically-sound
+4. ideally would work well with the rotation ball idea
+
+### Up-Forward Rotation 
+
+One possible way to represent rotation is with two orthogonal normalized vectors, 
+one representing the *up direction* of the object, and the other representing the *forward direction* of the object.
+
+If these two directions are undesirable, it is also possible to represent the rotation with two other orthogonal directions, such as the up and right directions, or the forward and left, etc.
+
+#### Fixing Invalid States
+
+Because Blender does not enforce valid states, there must be a method to convert an invalid state into a valid one.
+
+For this rotation mode, doing that is quite easy. As long as the up direction is normalized, that vector is in a valid state.
+When it comes to the forward vector, as it must remain orthogonal to the up vector, transforming it into a valid state is more difficult.
+However it can still easily be done by moving it into the nearest valid state.
+
+(This can be done by taking the invalid vector and projecting it onto the closest point on a circle of radius 1 that is orthogonal to the up vector)
+
+#### Pros
+
+This method has a few interesting benefits compared to other rotation modes
+- When using Blender's component-wise interpolation, it produces sensible results with minimal effort
+- The animation curves are fairly intuitive when animating the each vector in isolation of each other
+- This method doesn't use any trigonometry to represent or animate (which can be slow to compute)
+- The forward vector can be *pinned*, to avoid wiggling with the facing direction
+- Using a forward vector instead of a rotation around the up-axis avoids problems caused by the [hairy ball theorem](https://en.wikipedia.org/wiki/Hairy_ball_theorem)
+- This method would also work with the rotation ball idea from earlier, without the need to implement tied values.
+
+#### Cons 
+
+This method is not perfect however, no rotation mode could be. 
+- The path the forward vector takes may not be the most optimal
+- Animating both the up and forward vectors at the same time can be unintuitive (which could be addressed by the rotation ball idea)
+- When performing the component-wise interpolation between two states, if both states are coplanar with each other then there will be a sudden jump. 
+
+# Conclusion
+
+Overall, rotation in 3D is a mess, and Blender doesn't make it any cleaner. 
