@@ -10,17 +10,15 @@ Because of this, there are several different strategies to represent rotation. E
 
 Before these methods can be explained however, we need to discuss some concepts.
 
-## Axes
+<!-- ## Axes
 
 In our rotation logic, we care a lot about axes. In particular, the X axis, the Y axis, and the Z axis all tend to come up. These are all aligned with the X, Y, and Z dimensions respectively.
 
 In the coordinate system Blender uses, these axes correspond to the following directions:
 - -Y: Forward
 - X: Right
-- Z: Up
+- Z: Up -->
 
-However we don't always care about these axes in respect to the world itself, sometimes we care about the axes of the object.
-When the model is rotated, the object's local axes are rotated as well. These are called relative axes.
 
 ## Euler Rotation
 
@@ -75,7 +73,7 @@ In general, Eular Rotation works well for static positions, but they have many f
 
 ## Axis-Angle Rotation
 
-Axis-angle rotation works by defining an axis and a rotation around that axis.
+Axis-angle rotation works by taking advantage of the fact that any 3D rotation can be defined by an axis and a rotation around that axis.
 
 <!-- INSERT ANIMATION -->
 ![Axis-Angle Rotation](/blog-images/rotation-modes/Axis-Angle.webp)
@@ -96,7 +94,7 @@ Explaining the math behind them is difficult, but they function similarly to axi
 
 They have some properties that make them nice to use mathematically, meaning computers can nicely interpolate between two rotations defined with quaternions. 
 
-## Quaternion Flaws
+### Quaternion Flaws
 
 While quaternions are ideal for computers, they aren't ideal for people. They're difficult to conceptualize for animators, and they're difficult to understand mathematically for developers.
 While trying to research how the math behind them works, the common bit of advice I heard is to not even try, instead relying on the work other people have done to make them usable. 

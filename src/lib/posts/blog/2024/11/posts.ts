@@ -1,7 +1,7 @@
 import type { BlogPost } from "$lib/data/blog";
 
 import TestPost from "./2024-11-7 testpost.md?url";
-import RotationPost from "./2024-11- blender-rotation.md?url";
+import RotationPost from "./2024-12-4 blender-rotation.md?url";
 
 const posts: BlogPost[] = [
     {
