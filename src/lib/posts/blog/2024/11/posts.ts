@@ -15,7 +15,7 @@ const posts: BlogPost[] = [
         slug: "blender-rotation",
 
         title: "Blender Rotation Modes",
-        publishDate: new Date('2024-11-20'),
+        publishDate: new Date('2024-12-4'),
         file: RotationPost
     }
 ];

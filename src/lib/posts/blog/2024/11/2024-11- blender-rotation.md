@@ -26,12 +26,18 @@ When the model is rotated, the object's local axes are rotated as well. These ar
 
 Euler rotation is one of the simplest rotation models. You can imagine it as an extension of 2D rotation.
 
-Euler rotation works by defining how much the object should be rotated across the object's relative X, Y, and Z axes. If you've ever heard pitch, yaw, and roll, these are words used to describe euler rotation.
+Euler rotation works by defining how much the object should be rotated across the X, Y, and Z axes. If you've ever heard pitch, yaw, and roll, these are words used to describe euler rotation.
+
+<!-- INSERT ANIMATION -->
+
+![Euler Rotation](/blog-images/rotation-modes/ZYX-Rotation.webp)
 
 The easiest way to visualize this is as a gyroscope. The object is inside a set of three rings, with each ring connected to the previous one.
 When a ring rotates, all of the rings inside of it will also rotate. 
 
 <!-- INSERT ANIMATION -->
+
+![Gyro Rotation](/blog-images/rotation-modes/ZYX-Gyro.webp)
 
 ### Order Matters
 
@@ -42,6 +48,13 @@ In Blender, the order of these rotations is chosen when picking the rotation mod
 Ex: XYZ rotation mode: X -> Y -> Z, ZYX rotation mode: Z -> Y -> X 
 
 <!-- INSERT GIF -->
+
+<div>
+
+![XYZ Rotation](/blog-images/rotation-modes/XYZ-Rotation.webp)
+![ZYX Rotation](/blog-images/rotation-modes/ZYX-Rotation.webp)
+
+</div>
 
 ### Euler Rotation Flaws
 
@@ -65,6 +78,7 @@ In general, Eular Rotation works well for static positions, but they have many f
 Axis-angle rotation works by defining an axis and a rotation around that axis.
 
 <!-- INSERT ANIMATION -->
+![Axis-Angle Rotation](/blog-images/rotation-modes/Axis-Angle.webp)
 
 This avoids the gimbal-lock problem found in Euler rotation, but it's not without its own flaws. 
 
@@ -247,3 +261,18 @@ This method is not perfect however, no rotation mode could be.
 Overall, rotation in 3D is a mess, and Blender doesn't make it any cleaner. 
 However knowing how each rotation mode works allows you to make informed decisions to work around their limitations. 
 
+<style>
+
+.markdown img {
+	height: 20em !important;
+	width: auto !important;
+	margin: auto;
+}
+
+.markdown p:has(img)
+{
+	display: flex;
+	justify-content: center;
+}
+
+</style>
