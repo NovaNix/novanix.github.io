@@ -1,15 +1,11 @@
-intro to rotation modes
+When using Blender, If you've ever wondered what "rotation modes" were, or if you've had trouble animating between two orientations, you're not alone.
+Representing rotation in 3D space is a unique challenge, and animating between those two states is just as hard. Each rotation mode has their own benefits and downsides, each of which also impact animation.
 
-# 2D Rotation
-
-Rotation in two dimensions is fairly straightforward. All it takes is a single number to represent how much the object is rotated around its center point.
-
-
+However to choose which rotation mode to use, it's a good idea to understand how they work. 
 
 # 3D Rotation
 
-Coming from 2D rotation, 3D rotation is much more complex. Instead of having a single degree of freedom, in 3D we have to represent three degrees of freedom.
-
+3D rotation is a difficult problem for a few reasons. Unlike encoding the position or scale of an object, there isn't a single intuitive method of representing the rotation. 
 Because of this, there are several different strategies to represent rotation. Each one has their own advantages or disadvantages.
 
 Before these methods can be explained however, we need to discuss some concepts.
@@ -26,12 +22,16 @@ In the coordinate system Blender uses, these axes correspond to the following di
 However we don't always care about these axes in respect to the world itself, sometimes we care about the axes of the object.
 When the model is rotated, the object's local axes are rotated as well. These are called relative axes.
 
-
 ## Euler Rotation
 
 Euler rotation is one of the simplest rotation models. You can imagine it as an extension of 2D rotation.
 
-Euler rotation works by defining how much the object should be rotated across the object's relative X, Y, and Z axes. 
+Euler rotation works by defining how much the object should be rotated across the object's relative X, Y, and Z axes. If you've ever heard pitch, yaw, and roll, these are words used to describe euler rotation.
+
+The easiest way to visualize this is as a gyroscope. The object is inside a set of three rings, with each ring connected to the previous one.
+When a ring rotates, all of the rings inside of it will also rotate. 
+
+<!-- INSERT ANIMATION -->
 
 ### Order Matters
 
@@ -40,6 +40,8 @@ For example, rotating around the X axis, then the Y axis, and then the Z axis ca
 
 In Blender, the order of these rotations is chosen when picking the rotation mode. 
 Ex: XYZ rotation mode: X -> Y -> Z, ZYX rotation mode: Z -> Y -> X 
+
+<!-- INSERT GIF -->
 
 ### Euler Rotation Flaws
 
@@ -61,6 +63,9 @@ In general, Eular Rotation works well for static positions, but they have many f
 ## Axis-Angle Rotation
 
 Axis-angle rotation works by defining an axis and a rotation around that axis.
+
+<!-- INSERT ANIMATION -->
+
 This avoids the gimbal-lock problem found in Euler rotation, but it's not without its own flaws. 
 
 The primary issue with axis-angle rotation is that it's both awkward for computers and people to use.
@@ -72,6 +77,8 @@ The primary issue with axis-angle rotation is that it's both awkward for compute
 Quaternion rotations can be thought of as a more complex version of Axis-Angle rotations. 
 
 Explaining the math behind them is difficult, but they function similarly to axis-angle rotations, except with a unit quaternion rather than an axis and an angle.
+
+<!-- INSERT IMAGE OF QUATERNIONS -->
 
 They have some properties that make them nice to use mathematically, meaning computers can nicely interpolate between two rotations defined with quaternions. 
 
@@ -133,20 +140,6 @@ Additionally, in axis-angle and quaternion rotation modes, it is not intuitive w
 With position curves, even isolated from the 3D context, it is reasonably easy to look at an animation graph and determine what the resulting animation will look like at each frame.
 However with rotation curves, it is borderline impossible. 
 
-<!-- # fundamental blender issues -->
-
-<!-- doesn't take advantage of quaternion interpolation
-
-    individual values are interpolated. curves for these values can be modified individually without messing with each other, which can be a problem...
-
-    this also means that normalized values can become unnormalized when interpolating them
-
-in the case of axis angle and quaternion, taking this fundamentally 3d thing (a 3d unit vector) and modifying it through a 2d graph
-
-    it's difficult to map the curves into 3d however because each handle also includes a dimension of time
-
-    in addition to this, when parenting and other dynamic behaviors are included, it becomes difficult to visually display motion maps and curves in 3d space -->
-
 # Potential Solutions
 
 I believe there are a few changes Blender could make to make rotation modes (and animation in general) more intuitive and easier to use.
@@ -158,6 +151,8 @@ These ideas are partially incomplete however, as they all have their own flaws a
 One of the simplest ideas that could be implemented is to make the rotation modes more transparent. For euler angles, this can be done by *visualizing* the axes of rotation.
 
 By visualizing each axis, it becomes more clear to animators which value is associated with which axis.
+
+<!-- SHOW EXAMPLE? -->
 
 ## Tied-Value Interpolation
 
@@ -250,3 +245,5 @@ This method is not perfect however, no rotation mode could be.
 # Conclusion
 
 Overall, rotation in 3D is a mess, and Blender doesn't make it any cleaner. 
+However knowing how each rotation mode works allows you to make informed decisions to work around their limitations. 
+
