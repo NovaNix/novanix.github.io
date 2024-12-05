@@ -8,7 +8,7 @@ However to choose which rotation mode to use, it's a good idea to understand how
 3D rotation is a difficult problem for a few reasons. Unlike encoding the position or scale of an object, there isn't a single intuitive method of representing the rotation. 
 Because of this, there are several different strategies to represent rotation. Each one has their own advantages or disadvantages.
 
-Before these methods can be explained however, we need to discuss some concepts.
+<!-- Before these methods can be explained however, we need to discuss some concepts. -->
 
 <!-- ## Axes
 
